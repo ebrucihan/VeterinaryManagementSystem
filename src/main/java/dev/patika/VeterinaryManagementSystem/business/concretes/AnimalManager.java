@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AnimalManager implements IAnimalService {
@@ -77,8 +78,6 @@ public class AnimalManager implements IAnimalService {
         return new ResultData<>(true, Msg.ANIMAL_UPDATED, "200", response);
     }
 
-
-
     @Override
     public List<AnimalResponse> getAllAnimals() {
         List<Animal> animals = animalRepo.findAll();
@@ -101,7 +100,6 @@ public class AnimalManager implements IAnimalService {
         return modelMapperService.forResponse().map(animal, AnimalResponse.class);
     }
 
-
     @Override
     public void deleteAnimalById(long animalId) {
         Optional<Animal> optionalAnimal = animalRepo.findById(animalId);
@@ -112,4 +110,19 @@ public class AnimalManager implements IAnimalService {
         // Return success message without throwing exception
         throw new NotFoundException(Msg.ANIMAL_DELETED + " with ID: " + animalId);
     }
+
+    @Override
+    public List<AnimalResponse> getAnimalsByName(String animalName) {
+        List<Animal> animals = animalRepo.findByAnimalNameContainingIgnoreCase(animalName);
+        if (animals.isEmpty()) {
+            throw new NotFoundException(Msg.ANIMAL_NOT_FOUND + " with name containing: " + animalName);
+        }
+        return animals.stream()
+                .map(animal -> modelMapperService.forResponse().map(animal, AnimalResponse.class))
+                .collect(Collectors.toList());
+    }
+
+
+
+
 }

@@ -14,9 +14,13 @@ public interface IAnimalService {
     ResultData<AnimalResponse> updateAnimal(long animalId, AnimalUpdateRequest updateRequest);
 
     List<AnimalResponse> getAllAnimals();
+
     AnimalResponse getAnimalById(long animalId);
 
     void deleteAnimalById(long animalId);
+
+    List<AnimalResponse> getAnimalsByName(String animalName);
+
 
 
 }

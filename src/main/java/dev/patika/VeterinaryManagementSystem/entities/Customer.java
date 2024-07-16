@@ -1,10 +1,14 @@
 package dev.patika.VeterinaryManagementSystem.entities;
 
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyGroup;
+
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -34,5 +38,9 @@ public class Customer {
     @Column(name = "customer_city")
     private String customerCity;
 
+    // One customer can have multiple animals
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyGroup("AnimalDetails")
+    private List<Animal> animals;
 
 }

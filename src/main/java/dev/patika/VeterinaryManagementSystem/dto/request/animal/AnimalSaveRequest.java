@@ -1,5 +1,6 @@
 package dev.patika.VeterinaryManagementSystem.dto.request.animal;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,24 +13,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AnimalSaveRequest {
 
-    @NotNull
+    @NotBlank(message = "Animal name is mandatory")
     private String animalName;
 
-    @NotNull
+    @NotBlank(message = "Animal species is mandatory")
     private String animalSpecies;
 
-    @NotNull
+    @NotBlank(message = "Animal breed is mandatory")
     private String animalBreed;
 
-    @NotNull
+    @NotBlank(message = "Animal gender is mandatory")
     private String animalGender;
 
-    @NotNull
+    @NotBlank(message = "Animal colour is mandatory")
     private String animalColour;
 
-    @NotNull
-    private LocalDate animalDateOfBirth;
+    private LocalDate animalDateOfBirth; // LocalDate can be null if date of birth is unknown
 
-   @NotNull
-    private Long customerId;
+    private Long customerId; // This is used to associate the animal with a customer
 }

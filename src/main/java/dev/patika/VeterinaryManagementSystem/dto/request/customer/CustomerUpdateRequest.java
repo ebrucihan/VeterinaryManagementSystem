@@ -7,9 +7,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class CustomerSaveRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CustomerUpdateRequest {
 
     @NotBlank(message = "Name is mandatory")
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
@@ -28,6 +31,5 @@ public class CustomerSaveRequest {
     @NotBlank(message = "City is mandatory")
     @Size(max = 50, message = "City should be up to 50 characters")
     private String customerCity;
+
 }
-
-

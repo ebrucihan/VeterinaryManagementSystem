@@ -35,7 +35,7 @@ public class AnimalController {
     @PutMapping("/{animalId}")
     public ResponseEntity<ResultData<AnimalResponse>> updateAnimal(
             @PathVariable Long animalId,
-            @RequestBody AnimalUpdateRequest updateRequest) {
+            @Valid @RequestBody AnimalUpdateRequest updateRequest) {
 
         AnimalResponse updatedAnimal = animalService.updateAnimal(animalId, updateRequest).getData();
         ResultData<AnimalResponse> result = new ResultData<>(true, Msg.ANIMAL_UPDATED, "200", updatedAnimal);
@@ -43,23 +43,32 @@ public class AnimalController {
         return ResponseEntity.ok(result);
     }
 
-
-    //get
+    // Get all animals
     @GetMapping
     public List<AnimalResponse> getAllAnimals() {
         return animalService.getAllAnimals();
     }
 
+    // Get animal by ID
     @GetMapping("/{animalId}")
     public ResponseEntity<AnimalResponse> getAnimalById(@PathVariable Long animalId) {
         AnimalResponse animalResponse = animalService.getAnimalById(animalId);
         return ResponseEntity.ok(animalResponse);
     }
 
-
+    // Delete animal by ID
     @DeleteMapping("/{animalId}")
     public ResponseEntity<Void> deleteAnimalById(@PathVariable long animalId) {
         animalService.deleteAnimalById(animalId);
         return ResponseEntity.noContent().build();
     }
+
+    // Get animals by name
+    @GetMapping("/search")
+    public List<AnimalResponse> getAnimalsByName(@RequestParam String animalName) {
+        // Burada IAnimalService üzerinden ilgili metodu çağırarak isme göre filtreleme yapabiliriz
+        return animalService.getAnimalsByName(animalName);
+    }
+
+
 }

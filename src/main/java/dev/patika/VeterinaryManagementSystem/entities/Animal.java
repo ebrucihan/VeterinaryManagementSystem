@@ -1,10 +1,13 @@
 package dev.patika.VeterinaryManagementSystem.entities;
 
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import java.time.LocalDate;
 
@@ -37,4 +40,10 @@ public class Animal {
 
     @Column(name = "animal_birthday")
     private LocalDate animalDateOfBirth;
+
+    // Many animals can belong to one customer
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    @LazyToOne(LazyToOneOption.NO_PROXY)
+    private Customer customer;
 }
