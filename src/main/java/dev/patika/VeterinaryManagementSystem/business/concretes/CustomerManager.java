@@ -11,7 +11,6 @@ import dev.patika.VeterinaryManagementSystem.dto.request.customer.CustomerSaveRe
 import dev.patika.VeterinaryManagementSystem.dto.request.customer.CustomerUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.animal.AnimalResponse;
 import dev.patika.VeterinaryManagementSystem.dto.response.customer.CustomerResponse;
-import dev.patika.VeterinaryManagementSystem.entities.Animal;
 import dev.patika.VeterinaryManagementSystem.entities.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class CustomerManager implements ICustomerService {
         Customer customer = modelMapperService.forRequest().map(request, Customer.class);
         Customer savedCustomer = customerRepo.save(customer);
         CustomerResponse response = modelMapperService.forResponse().map(savedCustomer, CustomerResponse.class);
-        return ResultHelper.created(response);
+        return ResultHelper.created(response, Msg.VACCINE_CREATED);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class CustomerManager implements ICustomerService {
     @Override
     public void deleteCustomerById(long customerId) {
         if (!customerRepo.existsById(customerId)) {
-            throw new NotFoundException(Msg.CUSTOMER_NOT_FOUND +  " with ID: " + customerId);
+            throw new NotFoundException(Msg.CUSTOMER_NOT_FOUND + " with ID: " + customerId);
         }
         customerRepo.deleteById(customerId);
         throw new NotFoundException(Msg.CUSTOMER_DELETED + " with ID: " + customerId);

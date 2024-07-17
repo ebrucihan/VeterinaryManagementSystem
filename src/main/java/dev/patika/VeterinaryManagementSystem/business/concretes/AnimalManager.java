@@ -43,7 +43,7 @@ public class AnimalManager implements IAnimalService {
         Animal animal = modelMapperService.forRequest().map(request, Animal.class);
         Animal savedAnimal = animalRepo.save(animal);
         AnimalResponse response = modelMapperService.forResponse().map(savedAnimal, AnimalResponse.class);
-        return ResultHelper.created(response);
+        return ResultHelper.created(response, Msg.VACCINE_CREATED);
     }
 
     @Override

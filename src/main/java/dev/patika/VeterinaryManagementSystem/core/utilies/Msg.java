@@ -31,4 +31,9 @@ public class Msg {
     public static final String AVAILABLE_DATE_NOT_FOUND = "Available date not found";
     public static final String DOCTOR_NOT_AVAILABLE = "Doctor is not available on this date";
     public static final String APPOINTMENT_CONFLICT = "An appointment already exists for this date and time";
+    public static final String ANIMAL_VACCINE_CREATED = "Animal vaccine successfully created";
+    public static final String ANIMAL_VACCINE_UPDATED = "Animal vaccine successfully updated";
+    public static final String ANIMAL_VACCINE_DELETED = "Animal vaccine successfully deleted";
+    public static final String ANIMAL_VACCINE_NOT_FOUND = "Animal vaccine not found";
+    public static final String VACCINE_ALREADY_APPLIED = "This vaccine has already been applied to the animal";
 }

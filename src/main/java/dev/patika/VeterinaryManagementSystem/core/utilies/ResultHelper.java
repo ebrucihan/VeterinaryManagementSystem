@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 
 public class ResultHelper {
 
-    public static <T> ResultData<T> created(T data){
-        return new ResultData<>(true, Msg.CREATED, "201", data);
+    public static <T> ResultData<T> created(T data, String message){
+        return new ResultData<>(true, message, "201", data);
     }
 
     public static <T> ResultData<T> validateError(T data) {
@@ -22,11 +22,11 @@ public class ResultHelper {
         return new Result(false, Msg.ERROR, "400");
     }
 
-    public static Result ok(){
-        return new Result(true, Msg.OK, "200");
+    public static <T> ResultData<T> ok(T data){
+        return new ResultData<>(true, Msg.OK, "200", data);
     }
 
-    public static Result notFoundErorr(String msg){
+    public static Result notFoundError(String msg){
         return new Result(false, msg, "404");
     }
 

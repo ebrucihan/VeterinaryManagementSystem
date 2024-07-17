@@ -10,6 +10,8 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "animals")
@@ -46,4 +48,8 @@ public class Animal {
     @JoinColumn(name = "customer_id")
     @LazyToOne(LazyToOneOption.NO_PROXY)
     private Customer customer;
+
+
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AnimalVaccine> vaccines = new ArrayList<>();
 }
