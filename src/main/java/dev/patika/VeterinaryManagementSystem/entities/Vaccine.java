@@ -31,6 +31,4 @@ public class Vaccine {
     @Column(name = "protection_finish_date", nullable = false)
     private LocalDate protectionFinishDate;
 
-
-
 }
