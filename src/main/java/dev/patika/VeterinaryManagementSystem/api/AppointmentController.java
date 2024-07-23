@@ -1,16 +1,13 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAppointmentService;
-import dev.patika.VeterinaryManagementSystem.dao.AppointmentRepo;
 import dev.patika.VeterinaryManagementSystem.dto.request.appointment.AppointmentSaveRequest;
+import dev.patika.VeterinaryManagementSystem.dto.request.appointment.AppointmentUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.appointment.AppointmentResponse;
-import dev.patika.VeterinaryManagementSystem.entities.Appointment;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -39,10 +36,16 @@ public class AppointmentController {
 
     @GetMapping
     public List<AppointmentResponse> getAppointments(
-            @RequestParam(required = false) Long doctorId,
-            @RequestParam(required = false) Long animalId,
+            @RequestParam(required = false) Long doctor,
+            @RequestParam(required = false) Long animal,
             @RequestParam(required = false) LocalDateTime startDateTime,
             @RequestParam(required = false) LocalDateTime endDateTime) {
-        return appointmentService.getAppointments(doctorId, animalId, startDateTime, endDateTime);
+        return appointmentService.getAppointments(doctor, animal, startDateTime, endDateTime);
+    }
+
+    @PutMapping("/{id}")
+    public AppointmentResponse updateAppointment(@PathVariable Long id, @RequestBody AppointmentUpdateRequest request) {
+        request.setAppointmentId(id);
+        return appointmentService.updateAppointment(request);
     }
 }

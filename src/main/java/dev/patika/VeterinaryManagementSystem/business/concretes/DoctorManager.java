@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,7 @@ public class DoctorManager implements IDoctorService {
     }
 
     @Override
-    public boolean isDoctorAvailable(long doctorId, LocalDate date) {
+    public boolean isDoctorAvailable(long doctor, LocalDate date) {
         // Implement logic to check if the doctor is available on the given date
         // For simplicity, assume the doctor is always available
         return true;

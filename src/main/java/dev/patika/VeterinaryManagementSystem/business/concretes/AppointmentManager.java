@@ -34,6 +34,7 @@ public class AppointmentManager implements IAppointmentService {
         this.doctorManager = doctorManager;
     }
 
+
     @Override
     @Transactional(rollbackFor = {ScheduleConflictException.class, RuntimeException.class})
     public AppointmentResponse createAppointment(AppointmentSaveRequest request) {
@@ -72,12 +73,42 @@ public class AppointmentManager implements IAppointmentService {
     }
 
     @Override
-    public AppointmentResponse updateAppointment(AppointmentUpdateRequest request) {
+    @Transactional(rollbackFor = {ScheduleConflictException.class, RuntimeException.class})
+    public AppointmentResponse updateAppointment (AppointmentUpdateRequest request) {
         Appointment appointment = appointmentRepo.findById(request.getAppointmentId())
                 .orElseThrow(() -> new NotFoundException(Msg.APPOINTMENT_NOT_FOUND));
-        modelMapper.map(request, appointment);
+
+        // Güncellenecek hayvan ve doktor nesnelerini çekiyoruz
+        Animal animal = new Animal();
+        animal.setAnimalId(request.getAnimal());
+
+        Doctor doctor = new Doctor();
+        doctor.setDoctorId(request.getDoctor());
+
+        LocalDateTime appointmentDateTime = request.getAppointmentDateTime();
+
+        // Doctor availability check
+        if (!doctorManager.isDoctorAvailable(doctor.getDoctorId(), appointmentDateTime.toLocalDate())) {
+            throw new ScheduleConflictException(Msg.DOCTOR_NOT_AVAILABLE);
+        }
+
+        // Check if there is already an appointment at the given time (excluding current appointment)
+        if (appointmentRepo.existsByDoctor_DoctorIdAndAppointmentDateTimeAndAppointmentIdNot(doctor.getDoctorId(), appointmentDateTime, request.getAppointmentId())) {
+            throw new ScheduleConflictException(Msg.APPOINTMENT_CONFLICT);
+        }
+
+        // Update appointment entity
+        appointment.setAnimal(animal);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDateTime(appointmentDateTime);
+
+        // Save updated appointment to repository
         appointment = appointmentRepo.save(appointment);
-        return modelMapper.map(appointment, AppointmentResponse.class);
+
+        AppointmentResponse response = modelMapper.map(appointment, AppointmentResponse.class);
+        response.setMessage(Msg.APPOINTMENT_UPDATED); // Set the success message
+
+        return response;
     }
 
     @Override
@@ -95,12 +126,12 @@ public class AppointmentManager implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> getAppointments(Long doctorId, Long animalId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public List<AppointmentResponse> getAppointments(Long doctor, Long animal, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         List<Appointment> appointments;
-        if (doctorId != null && startDateTime != null && endDateTime != null) {
-            appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeBetween(doctorId, startDateTime, endDateTime);
-        } else if (animalId != null && startDateTime != null && endDateTime != null) {
-            appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeBetween(animalId, startDateTime, endDateTime);
+        if (doctor != null && startDateTime != null && endDateTime != null) {
+            appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeBetween(doctor, startDateTime, endDateTime);
+        } else if (animal != null && startDateTime != null && endDateTime != null) {
+            appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeBetween(animal, startDateTime, endDateTime);
         } else {
             appointments = appointmentRepo.findAll();
         }

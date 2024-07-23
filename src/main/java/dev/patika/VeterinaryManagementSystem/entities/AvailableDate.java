@@ -4,30 +4,26 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "available_dates")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Appointment {
+public class AvailableDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id")
-    private Long appointmentId;
+    @Column(name = "available_date_id")
+    private Long id;
 
-    @Column(name = "appointment_date_time", nullable = false)
-    private LocalDateTime appointmentDateTime;
-
-    @ManyToOne
-    @JoinColumn(name = "animal_id", nullable = false)
-    private Animal animal;
+    @Column(name = "date",nullable = false )
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
-
 
 }

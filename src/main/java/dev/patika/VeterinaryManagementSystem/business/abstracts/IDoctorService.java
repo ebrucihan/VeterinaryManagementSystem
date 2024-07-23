@@ -5,6 +5,7 @@ import dev.patika.VeterinaryManagementSystem.dto.request.doctor.DoctorUpdateRequ
 import dev.patika.VeterinaryManagementSystem.dto.response.doctor.DoctorResponse;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IDoctorService {
@@ -14,6 +15,5 @@ public interface IDoctorService {
     void delete(long id);
     DoctorResponse getById(long id);
     List<DoctorResponse> getAll();
-
-    boolean isDoctorAvailable(long doctorId, LocalDate date);
+    boolean isDoctorAvailable(long doctor, LocalDate date);
 }

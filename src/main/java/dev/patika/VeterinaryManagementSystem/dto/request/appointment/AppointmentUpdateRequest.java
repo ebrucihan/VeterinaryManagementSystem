@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class AppointmentUpdateRequest {
 
     private Long appointmentId;
-    private Long animalId;
-    private Long doctorId;
+    private Long animal;
+    private Long doctor;
     private LocalDateTime appointmentDateTime;
 }
