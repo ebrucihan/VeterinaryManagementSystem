@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Data
 public class AnimalVaccineUpdateRequest {
 
-    @NotNull(message = "Vaccine is required")
-    private Vaccine vaccine;
+    @NotNull(message = "Vaccine ID is required")
+    private Long vaccineId;
 
     @NotNull(message = "Application date is required")
     private LocalDate applicationDate;

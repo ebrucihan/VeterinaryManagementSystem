@@ -29,6 +29,4 @@ public class AnimalVaccine {
     @Column(name = "application_date", nullable = false)
     private LocalDate applicationDate;
 
-    @Column(name = "protection_finish_date") // Eğer bu alan varsa
-    private LocalDate protectionFinishDate;
 }

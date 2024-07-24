@@ -12,14 +12,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AnimalResponse {
 
-    private Long animalId;
+    private long animalId;
     private String animalName;
     private String animalSpecies;
     private String animalBreed;
     private String animalGender;
     private String animalColour;
     private LocalDate animalDateOfBirth;
-    private Long customerId;
+    private Long customerId; // Müşteri ID'si
 
 
 }

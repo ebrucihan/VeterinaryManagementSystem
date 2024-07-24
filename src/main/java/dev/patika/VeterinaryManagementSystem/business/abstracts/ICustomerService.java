@@ -18,7 +18,7 @@ public interface ICustomerService {
 
     CustomerResponse getCustomerById(long customerId);
 
-    void deleteCustomerById(long customerId);
+    ResultData<String> deleteCustomerById(long customerId);
 
     List<CustomerResponse> getCustomersByName(String customerName);
 

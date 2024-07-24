@@ -45,7 +45,7 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         Vaccine vaccine = vaccineRepo.findById(request.getVaccineId())
                 .orElseThrow(() -> new NotFoundException("Vaccine not found with id: " + request.getVaccineId()));
 
-        validateVaccineAvailability(animal, vaccine);
+        validateVaccineAvailability(animal, vaccine); // Koruyuculuk bitiş tarihi kontrolü ekleyin
 
         AnimalVaccine animalVaccine = new AnimalVaccine();
         animalVaccine.setAnimal(animal);
@@ -62,9 +62,12 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         AnimalVaccine animalVaccine = animalVaccineRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Animal vaccine not found with id: " + id));
 
-        validateVaccineAvailability(animalVaccine.getAnimal(), request.getVaccine());
+        Vaccine vaccine = vaccineRepo.findById(request.getVaccineId())
+                .orElseThrow(() -> new NotFoundException("Vaccine not found with id: " + request.getVaccineId()));
 
-        animalVaccine.setVaccine(request.getVaccine());
+        validateVaccineAvailability(animalVaccine.getAnimal(), vaccine); // Koruyuculuk bitiş tarihi kontrolü ekleyin
+
+        animalVaccine.setVaccine(vaccine);
         animalVaccine.setApplicationDate(request.getApplicationDate());
 
         AnimalVaccine updatedAnimalVaccine = animalVaccineRepo.save(animalVaccine);
@@ -144,8 +147,15 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
     }
 
     private void validateVaccineAvailability(Animal animal, Vaccine vaccine) {
-        if (animalVaccineRepo.existsByAnimalAndVaccine(animal, vaccine)) {
-            throw new IllegalArgumentException("Vaccine has already been applied to this animal");
+        // Koruyuculuk bitiş tarihi kontrolü
+        if (vaccine.getProtectionFinishDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("The vaccine has expired and cannot be applied.");
+        }
+
+        // Daha önce uygulanmış mı kontrolü
+        boolean exists = animalVaccineRepo.existsByAnimalAndVaccine(animal, vaccine);
+        if (exists) {
+            throw new IllegalArgumentException("Vaccine has already been applied to this animal.");
         }
     }
 }

@@ -37,7 +37,7 @@ public class CustomerManager implements ICustomerService {
         Customer customer = modelMapperService.forRequest().map(request, Customer.class);
         Customer savedCustomer = customerRepo.save(customer);
         CustomerResponse response = modelMapperService.forResponse().map(savedCustomer, CustomerResponse.class);
-        return ResultHelper.created(response, Msg.VACCINE_CREATED);
+        return ResultHelper.created(response, Msg.CUSTOMER_CREATED);
     }
 
     @Override
@@ -87,13 +87,12 @@ public class CustomerManager implements ICustomerService {
     }
 
     @Override
-    public void deleteCustomerById(long customerId) {
+    public ResultData<String> deleteCustomerById(long customerId) {
         if (!customerRepo.existsById(customerId)) {
             throw new NotFoundException(Msg.CUSTOMER_NOT_FOUND + " with ID: " + customerId);
         }
         customerRepo.deleteById(customerId);
-        throw new NotFoundException(Msg.CUSTOMER_DELETED + " with ID: " + customerId);
-
+        return new ResultData<>(true, Msg.CUSTOMER_DELETED, "200", "Customer ID: " + customerId);
     }
 
     @Override

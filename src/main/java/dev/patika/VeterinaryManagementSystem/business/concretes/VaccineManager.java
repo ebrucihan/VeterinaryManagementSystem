@@ -12,6 +12,9 @@ import dev.patika.VeterinaryManagementSystem.dto.response.vaccine.VaccineRespons
 import dev.patika.VeterinaryManagementSystem.entities.Vaccine;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class VaccineManager implements IVaccineService {
 
@@ -49,16 +52,15 @@ public class VaccineManager implements IVaccineService {
         return ResultHelper.ok(response);
     }
 
-
-    private VaccineResponse mapToResponse(Vaccine vaccine) {
-        VaccineResponse response = new VaccineResponse();
-        response.setVaccineId(vaccine.getVaccineId());
-        response.setVaccineName(vaccine.getVaccineName());
-        response.setVaccineCode(vaccine.getVaccineCode());
-        response.setProtectionStartDate(vaccine.getProtectionStartDate());
-        response.setProtectionFinishDate(vaccine.getProtectionFinishDate());
-        return response;
+    @Override
+    public ResultData<List<VaccineResponse>> getAllVaccines() {
+        List<Vaccine> vaccines = vaccineRepo.findAll();
+        List<VaccineResponse> responses = vaccines.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+        return ResultHelper.ok(responses);
     }
+
 
     @Override
     public ResultData<VaccineResponse> getVaccineById(Long id) {
@@ -77,4 +79,16 @@ public class VaccineManager implements IVaccineService {
         vaccineRepo.delete(vaccine);
         return ResultHelper.ok(Msg.VACCINE_DELETED);
     }
+
+    private VaccineResponse mapToResponse(Vaccine vaccine) {
+        VaccineResponse response = new VaccineResponse();
+        response.setVaccineId(vaccine.getVaccineId());
+        response.setVaccineName(vaccine.getVaccineName());
+        response.setVaccineCode(vaccine.getVaccineCode());
+        response.setProtectionStartDate(vaccine.getProtectionStartDate());
+        response.setProtectionFinishDate(vaccine.getProtectionFinishDate());
+        return response;
+    }
+
+
 }

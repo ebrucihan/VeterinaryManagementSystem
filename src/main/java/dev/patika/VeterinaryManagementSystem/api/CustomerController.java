@@ -49,9 +49,9 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
-        customerService.deleteCustomerById(customerId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResultData<String>> deleteCustomer(@PathVariable Long customerId) {
+        ResultData<String> result = customerService.deleteCustomerById(customerId);
+        return ResponseEntity.status(Integer.parseInt(result.getCode())).body(result);
     }
 
     @GetMapping("/search")

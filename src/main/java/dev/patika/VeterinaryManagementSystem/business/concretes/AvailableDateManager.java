@@ -7,6 +7,7 @@ import dev.patika.VeterinaryManagementSystem.core.utilies.Msg;
 import dev.patika.VeterinaryManagementSystem.dao.AvailableDateRepo;
 import dev.patika.VeterinaryManagementSystem.dao.DoctorRepo;
 import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateSaveRequest;
+import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.availabledate.AvailableDateResponse;
 import dev.patika.VeterinaryManagementSystem.entities.AvailableDate;
 import dev.patika.VeterinaryManagementSystem.entities.Doctor;
@@ -42,6 +43,15 @@ public class AvailableDateManager implements IAvailableDateService {
     }
 
     @Override
+    public AvailableDateResponse updateAvailableDate(AvailableDateUpdateRequest request) {
+        AvailableDate availableDate = availableDateRepo.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(Msg.AVAILABLE_DATE_NOT_FOUND));
+        availableDate.setDate(request.getDate());
+        AvailableDate updatedAvailableDate = availableDateRepo.save(availableDate);
+        return modelMapper.map(updatedAvailableDate, AvailableDateResponse.class);
+    }
+
+    @Override
     public List<AvailableDateResponse> getAvailableDatesByDoctor(Long doctorId) {
         List<AvailableDate> availableDates = availableDateRepo.findByDoctor_DoctorId(doctorId);
         return availableDates.stream()
@@ -50,7 +60,17 @@ public class AvailableDateManager implements IAvailableDateService {
     }
 
     @Override
+    public List<AvailableDateResponse> getAllAvailableDates() { // Yeni yöntem
+        List<AvailableDate> availableDates = availableDateRepo.findAll();
+        return availableDates.stream()
+                .map(date -> modelMapper.map(date, AvailableDateResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public boolean isDoctorAvailable(Long doctorId, LocalDate date) {
-        return !availableDateRepo.existsByDoctor_DoctorIdAndDate(doctorId, date);
+        boolean exists = availableDateRepo.existsByDoctor_DoctorIdAndDate(doctorId, date);
+        System.out.println("Doctor ID: " + doctorId + ", Date: " + date + ", Exists: " + exists + ", Available: " + !exists);
+        return !exists; // Eğer kayıt varsa, doktor müsait değil
     }
 }

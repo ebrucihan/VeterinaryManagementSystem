@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/vaccines")
 public class VaccineController {
@@ -33,6 +35,11 @@ public class VaccineController {
             @PathVariable Long id,
             @Valid @RequestBody VaccineUpdateRequest request) {
         return ResponseEntity.ok(vaccineService.updateVaccine(id, request));
+    }
+
+    @GetMapping
+    public ResponseEntity<ResultData<List<VaccineResponse>>> getAllVaccines() {
+        return ResponseEntity.ok(vaccineService.getAllVaccines());
     }
 
     @GetMapping("/{id}")

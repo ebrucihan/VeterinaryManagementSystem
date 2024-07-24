@@ -2,6 +2,7 @@ package dev.patika.VeterinaryManagementSystem.api;
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAvailableDateService;
 import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateSaveRequest;
+import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.availabledate.AvailableDateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,18 @@ public class AvailableDateController {
     @PostMapping
     public ResponseEntity<AvailableDateResponse> addAvailableDate(@RequestBody AvailableDateSaveRequest request) {
         AvailableDateResponse response = availableDateService.addAvailableDate(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AvailableDateResponse> updateAvailableDate(@RequestBody AvailableDateUpdateRequest request) {
+        AvailableDateResponse response = availableDateService.updateAvailableDate(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AvailableDateResponse>> getAllAvailableDates() { // Yeni endpoint
+        List<AvailableDateResponse> response = availableDateService.getAllAvailableDates();
         return ResponseEntity.ok(response);
     }
 

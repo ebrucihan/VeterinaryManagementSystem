@@ -12,6 +12,7 @@ import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalSaveReques
 import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.animal.AnimalResponse;
 import dev.patika.VeterinaryManagementSystem.entities.Animal;
+import dev.patika.VeterinaryManagementSystem.entities.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +42,25 @@ public class AnimalManager implements IAnimalService {
         }
 
         Animal animal = modelMapperService.forRequest().map(request, Animal.class);
+
+        Customer customer = customerRepo.findById(request.getCustomerId()).orElseThrow(() ->
+                new NotFoundException("Customer not found with ID: " + request.getCustomerId()));
+        animal.setCustomer(customer);
+
         Animal savedAnimal = animalRepo.save(animal);
-        AnimalResponse response = modelMapperService.forResponse().map(savedAnimal, AnimalResponse.class);
-        return ResultHelper.created(response, Msg.VACCINE_CREATED);
+
+        // Yanıt DTO'sunu manuel olarak oluşturun
+        AnimalResponse response = new AnimalResponse();
+        response.setAnimalId(savedAnimal.getAnimalId());
+        response.setAnimalName(savedAnimal.getAnimalName());
+        response.setAnimalSpecies(savedAnimal.getAnimalSpecies());
+        response.setAnimalBreed(savedAnimal.getAnimalBreed());
+        response.setAnimalGender(savedAnimal.getAnimalGender());
+        response.setAnimalColour(savedAnimal.getAnimalColour());
+        response.setAnimalDateOfBirth(savedAnimal.getAnimalDateOfBirth());
+        response.setCustomerId(savedAnimal.getCustomer() != null ? savedAnimal.getCustomer().getCustomerId() : null);
+
+        return ResultHelper.created(response, Msg.ANIMAL_CREATED);
     }
 
     @Override
@@ -53,6 +70,11 @@ public class AnimalManager implements IAnimalService {
             throw new NotFoundException("Animal not found with ID: " + animalId);
         }
         Animal existingAnimal = optionalAnimal.get();
+
+        // Eğer müşteri ID'sini güncellemeye çalışıyorsanız, bunu atlayın
+        if (updateRequest.getCustomerId() != null && !updateRequest.getCustomerId().equals(existingAnimal.getCustomer().getCustomerId())) {
+            throw new IllegalArgumentException("Customer ID cannot be changed.");
+        }
 
         if (updateRequest.getAnimalName() != null) {
             existingAnimal.setAnimalName(updateRequest.getAnimalName());
@@ -73,7 +95,10 @@ public class AnimalManager implements IAnimalService {
             existingAnimal.setAnimalDateOfBirth(updateRequest.getAnimalDateOfBirth());
         }
 
+        // Hayvanı güncelle
         Animal updatedAnimal = animalRepo.save(existingAnimal);
+
+        // Yanıt DTO'sunu oluştur
         AnimalResponse response = modelMapperService.forResponse().map(updatedAnimal, AnimalResponse.class);
         return new ResultData<>(true, Msg.ANIMAL_UPDATED, "200", response);
     }
@@ -81,13 +106,9 @@ public class AnimalManager implements IAnimalService {
     @Override
     public List<AnimalResponse> getAllAnimals() {
         List<Animal> animals = animalRepo.findAll();
-        List<AnimalResponse> animalResponses = new ArrayList<>();
-
-        for (Animal animal : animals) {
-            animalResponses.add(modelMapperService.forResponse().map(animal, AnimalResponse.class));
-        }
-
-        return animalResponses;
+        return animals.stream()
+                .map(animal -> modelMapperService.forResponse().map(animal, AnimalResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -121,8 +142,4 @@ public class AnimalManager implements IAnimalService {
                 .map(animal -> modelMapperService.forResponse().map(animal, AnimalResponse.class))
                 .collect(Collectors.toList());
     }
-
-
-
-
 }
