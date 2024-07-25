@@ -28,7 +28,9 @@ public class AnimalSaveRequest {
     @NotBlank(message = "Animal colour is mandatory")
     private String animalColour;
 
+    @NotNull
     private LocalDate animalDateOfBirth; // LocalDate can be null if date of birth is unknown
 
+    @NotNull
     private Long customerId; // This is used to associate the animal with a customer
 }

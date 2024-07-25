@@ -29,14 +29,15 @@ public class AnimalVaccineController {
     }
 
     @PostMapping
-    public ResultData<AnimalVaccineResponse> addAnimalVaccine(@RequestBody AnimalVaccineSaveRequest request) {
-        return animalVaccineService.addAnimalVaccine(request);
+    public ResponseEntity<ResultData<AnimalVaccineResponse>> addAnimalVaccine(@Valid @RequestBody AnimalVaccineSaveRequest request) {
+        ResultData<AnimalVaccineResponse> result = animalVaccineService.addAnimalVaccine(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<AnimalVaccineResponse>> updateAnimalVaccine(
             @PathVariable("id") Long id,
-            @RequestBody AnimalVaccineUpdateRequest request) {
+            @Valid @RequestBody AnimalVaccineUpdateRequest request) {
         ResultData<AnimalVaccineResponse> result = animalVaccineService.updateAnimalVaccine(id, request);
         return ResponseEntity.ok(result);
     }
@@ -59,6 +60,6 @@ public class AnimalVaccineController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<String>> deleteAnimalVaccine(@PathVariable("id") Long id) {
         ResultData<String> result = animalVaccineService.deleteAnimalVaccine(id);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);  // HTTP 204 No Content
     }
 }

@@ -53,16 +53,6 @@ public class VaccineManager implements IVaccineService {
     }
 
     @Override
-    public ResultData<List<VaccineResponse>> getAllVaccines() {
-        List<Vaccine> vaccines = vaccineRepo.findAll();
-        List<VaccineResponse> responses = vaccines.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-        return ResultHelper.ok(responses);
-    }
-
-
-    @Override
     public ResultData<VaccineResponse> getVaccineById(Long id) {
         Vaccine vaccine = vaccineRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException(Msg.VACCINE_NOT_FOUND));
@@ -80,6 +70,15 @@ public class VaccineManager implements IVaccineService {
         return ResultHelper.ok(Msg.VACCINE_DELETED);
     }
 
+    @Override
+    public ResultData<List<VaccineResponse>> getAllVaccines() {
+        List<Vaccine> vaccines = vaccineRepo.findAll();
+        List<VaccineResponse> responses = vaccines.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+        return ResultHelper.ok(responses);
+    }
+
     private VaccineResponse mapToResponse(Vaccine vaccine) {
         VaccineResponse response = new VaccineResponse();
         response.setVaccineId(vaccine.getVaccineId());
@@ -89,6 +88,4 @@ public class VaccineManager implements IVaccineService {
         response.setProtectionFinishDate(vaccine.getProtectionFinishDate());
         return response;
     }
-
-
 }

@@ -45,7 +45,7 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         Vaccine vaccine = vaccineRepo.findById(request.getVaccineId())
                 .orElseThrow(() -> new NotFoundException("Vaccine not found with id: " + request.getVaccineId()));
 
-        validateVaccineAvailability(animal, vaccine); // Koruyuculuk bitiş tarihi kontrolü ekleyin
+        validateVaccineAvailability(animal, vaccine, request.getApplicationDate());
 
         AnimalVaccine animalVaccine = new AnimalVaccine();
         animalVaccine.setAnimal(animal);
@@ -54,7 +54,7 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
 
         AnimalVaccine savedAnimalVaccine = animalVaccineRepo.save(animalVaccine);
         AnimalVaccineResponse response = mapToResponse(savedAnimalVaccine);
-        return ResultHelper.created(response, "Animal vaccine created successfully");
+        return ResultHelper.created(response, Msg.ANIMAL_VACCINE_CREATED);
     }
 
     @Override
@@ -65,7 +65,10 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         Vaccine vaccine = vaccineRepo.findById(request.getVaccineId())
                 .orElseThrow(() -> new NotFoundException("Vaccine not found with id: " + request.getVaccineId()));
 
-        validateVaccineAvailability(animalVaccine.getAnimal(), vaccine); // Koruyuculuk bitiş tarihi kontrolü ekleyin
+        // Validate vaccine availability only if the vaccine is different
+        if (!animalVaccine.getVaccine().equals(vaccine)) {
+            validateVaccineAvailability(animalVaccine.getAnimal(), vaccine, request.getApplicationDate());
+        }
 
         animalVaccine.setVaccine(vaccine);
         animalVaccine.setApplicationDate(request.getApplicationDate());
@@ -96,7 +99,7 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
                 .orElseThrow(() -> new NotFoundException("Animal vaccine not found with id: " + id));
 
         animalVaccineRepo.delete(animalVaccine);
-        return ResultHelper.ok("Animal vaccine deleted successfully");
+        return ResultHelper.ok(Msg.ANIMAL_VACCINE_DELETED);
     }
 
     private AnimalVaccineResponse mapToResponse(AnimalVaccine animalVaccine) {
@@ -126,7 +129,6 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         animalResponse.setAnimalGender(animal.getAnimalGender());
         animalResponse.setAnimalColour(animal.getAnimalColour());
         animalResponse.setAnimalDateOfBirth(animal.getAnimalDateOfBirth());
-        // Map customer details
         if (animal.getCustomer() != null) {
             animalResponse.setCustomerId(animal.getCustomer().getCustomerId());
         }
@@ -146,13 +148,11 @@ public class AnimalVaccineManager implements IAnimalVaccineService {
         return vaccineResponse;
     }
 
-    private void validateVaccineAvailability(Animal animal, Vaccine vaccine) {
-        // Koruyuculuk bitiş tarihi kontrolü
-        if (vaccine.getProtectionFinishDate().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("The vaccine has expired and cannot be applied.");
+    private void validateVaccineAvailability(Animal animal, Vaccine vaccine, LocalDate applicationDate) {
+        if (applicationDate.isBefore(vaccine.getProtectionStartDate()) || applicationDate.isAfter(vaccine.getProtectionFinishDate())) {
+            throw new IllegalArgumentException("The vaccine is not available for application on the given date.");
         }
 
-        // Daha önce uygulanmış mı kontrolü
         boolean exists = animalVaccineRepo.existsByAnimalAndVaccine(animal, vaccine);
         if (exists) {
             throw new IllegalArgumentException("Vaccine has already been applied to this animal.");

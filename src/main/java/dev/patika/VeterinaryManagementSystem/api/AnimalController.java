@@ -1,6 +1,7 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAnimalService;
+import dev.patika.VeterinaryManagementSystem.core.result.Result;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.core.utilies.Msg;
 import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalSaveRequest;
@@ -8,6 +9,7 @@ import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalUpdateRequ
 import dev.patika.VeterinaryManagementSystem.dto.response.animal.AnimalResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,9 +60,13 @@ public class AnimalController {
 
     // Delete animal by ID
     @DeleteMapping("/{animalId}")
-    public ResponseEntity<Void> deleteAnimalById(@PathVariable long animalId) {
-        animalService.deleteAnimalById(animalId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Result> deleteAnimalById(@PathVariable long animalId) {
+        Result result = animalService.deleteAnimalById(animalId);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);  // HTTP 200 OK with result message
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found with result message
+        }
     }
 
     // Get animals by name

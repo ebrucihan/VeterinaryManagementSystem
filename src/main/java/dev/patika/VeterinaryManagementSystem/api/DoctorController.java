@@ -2,6 +2,7 @@ package dev.patika.VeterinaryManagementSystem.api;
 
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IDoctorService;
+import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.core.utilies.Msg;
 import dev.patika.VeterinaryManagementSystem.dto.request.doctor.DoctorSaveRequest;
 import dev.patika.VeterinaryManagementSystem.dto.request.doctor.DoctorUpdateRequest;
@@ -19,40 +20,49 @@ public class DoctorController {
 
     private final IDoctorService doctorService;
 
+    @Autowired
     public DoctorController(IDoctorService doctorService) {
         this.doctorService = doctorService;
     }
 
     @PostMapping
     public ResponseEntity<DoctorResponse> save(@RequestBody DoctorSaveRequest request) {
-        DoctorResponse response = doctorService.save(request);
-        response.setMessage(Msg.DOCTOR_CREATED);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        ResultData<DoctorResponse> resultData = doctorService.save(request);
+        DoctorResponse response = resultData.getData();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response); // Created message is handled in ResultData
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorResponse> update(@PathVariable long id, @RequestBody DoctorUpdateRequest request) {
-        DoctorResponse response = doctorService.update(id, request);
-        response.setMessage(Msg.DOCTOR_UPDATED);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<DoctorResponse> update(
+            @PathVariable long id,
+            @RequestBody DoctorUpdateRequest request) {
+        ResultData<DoctorResponse> resultData = doctorService.update(id, request);
+        DoctorResponse response = resultData.getData();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response); // Updated message is handled in ResultData
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponse> getById(@PathVariable long id) {
-        DoctorResponse response = doctorService.getById(id);
-        response.setMessage(Msg.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        ResultData<DoctorResponse> resultData = doctorService.getById(id);
+        DoctorResponse response = resultData.getData();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response); // OK message is handled in ResultData
     }
 
     @GetMapping
     public ResponseEntity<List<DoctorResponse>> getAll() {
-        List<DoctorResponse> responseList = doctorService.getAll();
-        return new ResponseEntity<>(responseList, HttpStatus.OK);
+        ResultData<List<DoctorResponse>> resultData = doctorService.getAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(resultData.getData()); // OK message is handled in ResultData
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
-        doctorService.delete(id);
-        return new ResponseEntity<>(Msg.DOCTOR_DELETED, HttpStatus.OK);
+        ResultData<Void> resultData = doctorService.delete(id);
+        String message = resultData.getMessage() != null ? resultData.getMessage() : Msg.DOCTOR_DELETED;
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(message); // Message from ResultData or default message from Msg class
     }
 }

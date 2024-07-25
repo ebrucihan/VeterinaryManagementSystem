@@ -15,5 +15,5 @@ public class DoctorResponse {
     private String doctorMail;
     private String doctorAddress;
     private String doctorCity;
-    private String message;
+
 }

@@ -9,6 +9,7 @@ import dev.patika.VeterinaryManagementSystem.dto.response.animal.AnimalResponse;
 import dev.patika.VeterinaryManagementSystem.dto.response.customer.CustomerResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,42 +28,47 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResultData<CustomerResponse> addCustomer(@Valid @RequestBody CustomerSaveRequest request) {
-        return customerService.addCustomer(request);
+    public ResponseEntity<ResultData<CustomerResponse>> addCustomer(@Valid @RequestBody CustomerSaveRequest request) {
+        ResultData<CustomerResponse> result = customerService.addCustomer(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
     @PutMapping("/{customerId}")
     public ResponseEntity<ResultData<CustomerResponse>> updateCustomer(
             @PathVariable Long customerId,
             @Valid @RequestBody CustomerUpdateRequest request) {
-        return ResponseEntity.ok(customerService.updateCustomer(customerId, request));
+        ResultData<CustomerResponse> result = customerService.updateCustomer(customerId, request);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public List<CustomerResponse> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<List<CustomerResponse>> getAllCustomers() {
+        List<CustomerResponse> result = customerService.getAllCustomers();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{customerId}")
     public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long customerId) {
-        return ResponseEntity.ok(customerService.getCustomerById(customerId));
+        CustomerResponse result = customerService.getCustomerById(customerId);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{customerId}")
     public ResponseEntity<ResultData<String>> deleteCustomer(@PathVariable Long customerId) {
         ResultData<String> result = customerService.deleteCustomerById(customerId);
-        return ResponseEntity.status(Integer.parseInt(result.getCode())).body(result);
+        HttpStatus status = HttpStatus.resolve(Integer.parseInt(result.getCode()));
+        return ResponseEntity.status(status != null ? status : HttpStatus.INTERNAL_SERVER_ERROR).body(result);
     }
 
     @GetMapping("/search")
-    public List<CustomerResponse> searchCustomersByName(@RequestParam String customerName) {
-        return customerService.getCustomersByName(customerName);
+    public ResponseEntity<List<CustomerResponse>> searchCustomersByName(@RequestParam String customerName) {
+        List<CustomerResponse> result = customerService.getCustomersByName(customerName);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/customers/{customerId}/animals")
-    public List<AnimalResponse> getAnimalsByCustomerId(@PathVariable("customerId") Long customerId) {
-        return customerService.getAnimalsByCustomerId(customerId);
+    @GetMapping("/{customerId}/animals")
+    public ResponseEntity<List<AnimalResponse>> getAnimalsByCustomerId(@PathVariable Long customerId) {
+        List<AnimalResponse> result = customerService.getAnimalsByCustomerId(customerId);
+        return ResponseEntity.ok(result);
     }
-
-
 }

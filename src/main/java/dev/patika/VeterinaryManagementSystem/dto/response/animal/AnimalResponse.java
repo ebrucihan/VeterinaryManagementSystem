@@ -19,7 +19,7 @@ public class AnimalResponse {
     private String animalGender;
     private String animalColour;
     private LocalDate animalDateOfBirth;
-    private Long customerId; // Müşteri ID'si
+    private Long customerId; //Customer ID
 
 
 }

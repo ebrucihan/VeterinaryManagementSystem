@@ -8,6 +8,7 @@ import dev.patika.VeterinaryManagementSystem.dto.request.vaccine.VaccineUpdateRe
 import dev.patika.VeterinaryManagementSystem.dto.response.vaccine.VaccineResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,31 +25,39 @@ public class VaccineController {
         this.vaccineService = vaccineService;
     }
 
-
     @PostMapping
-    public ResultData<VaccineResponse> addVaccine(@RequestBody VaccineSaveRequest request) {
-        return vaccineService.addVaccine(request);
+    public ResponseEntity<ResultData<VaccineResponse>> addVaccine(@Valid @RequestBody VaccineSaveRequest request) {
+        ResultData<VaccineResponse> result = vaccineService.addVaccine(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<VaccineResponse>> updateVaccine(
             @PathVariable Long id,
             @Valid @RequestBody VaccineUpdateRequest request) {
-        return ResponseEntity.ok(vaccineService.updateVaccine(id, request));
+        ResultData<VaccineResponse> result = vaccineService.updateVaccine(id, request);
+        return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
     @GetMapping
     public ResponseEntity<ResultData<List<VaccineResponse>>> getAllVaccines() {
-        return ResponseEntity.ok(vaccineService.getAllVaccines());
+        ResultData<List<VaccineResponse>> result = vaccineService.getAllVaccines();
+        return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResultData<VaccineResponse>> getVaccineById(@PathVariable Long id) {
-        return ResponseEntity.ok(vaccineService.getVaccineById(id));
+        ResultData<VaccineResponse> result = vaccineService.getVaccineById(id);
+        return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<String>> deleteVaccine(@PathVariable Long id) {
-        return ResponseEntity.ok(vaccineService.deleteVaccine(id));
+        ResultData<String> result = vaccineService.deleteVaccine(id);
+        if (result.isStatus()) {
+            return ResponseEntity.ok(result);  // HTTP 200 OK with result message
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found with result message
+        }
     }
 }

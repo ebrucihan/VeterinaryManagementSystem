@@ -10,4 +10,5 @@ public interface AvailableDateRepo extends JpaRepository<AvailableDate,Long> {
 
     List<AvailableDate> findByDoctor_DoctorId(Long doctorId);
     boolean existsByDoctor_DoctorIdAndDate(Long doctorId, LocalDate date);
+    List<AvailableDate> findByDoctor_DoctorIdAndDate(Long doctorId, LocalDate date);
 }

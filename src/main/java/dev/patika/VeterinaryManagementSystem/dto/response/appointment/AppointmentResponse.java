@@ -15,7 +15,6 @@ public class AppointmentResponse {
     private Long animalId;
     private Long doctorId;
     private LocalDateTime appointmentDateTime;
-    private String message;
 
 
 }

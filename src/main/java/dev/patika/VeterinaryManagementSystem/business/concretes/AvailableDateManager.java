@@ -3,6 +3,7 @@ package dev.patika.VeterinaryManagementSystem.business.concretes;
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAvailableDateService;
 import dev.patika.VeterinaryManagementSystem.core.exception.NotFoundException;
+import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.core.utilies.Msg;
 import dev.patika.VeterinaryManagementSystem.dao.AvailableDateRepo;
 import dev.patika.VeterinaryManagementSystem.dao.DoctorRepo;
@@ -31,46 +32,100 @@ public class AvailableDateManager implements IAvailableDateService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
-    public AvailableDateResponse addAvailableDate(AvailableDateSaveRequest request) {
+    public ResultData<AvailableDateResponse> addAvailableDate(AvailableDateSaveRequest request) {
         Doctor doctor = doctorRepo.findById(request.getDoctorId())
                 .orElseThrow(() -> new NotFoundException(Msg.DOCTOR_NOT_FOUND));
-        AvailableDate availableDate = modelMapper.map(request, AvailableDate.class);
+
+        // Check if the available date already exists for the given doctor
+        boolean exists = availableDateRepo.existsByDoctor_DoctorIdAndDate(request.getDoctorId(), request.getDate());
+        if (exists) {
+            return new ResultData<>(false, Msg.DOCTOR_DATE_ALREADY_EXISTS, "400", null);
+        }
+
+        AvailableDate availableDate = new AvailableDate();
+        availableDate.setDate(request.getDate());
         availableDate.setDoctor(doctor);
         AvailableDate savedAvailableDate = availableDateRepo.save(availableDate);
-        return modelMapper.map(savedAvailableDate, AvailableDateResponse.class);
+
+        // Manuel dönüşüm
+        AvailableDateResponse response = new AvailableDateResponse();
+        response.setId(savedAvailableDate.getId());
+        response.setDoctorId(savedAvailableDate.getDoctor().getDoctorId());
+        response.setDate(savedAvailableDate.getDate());
+
+        return new ResultData<>(true, Msg.CREATED, "201", response);
     }
 
     @Override
-    public AvailableDateResponse updateAvailableDate(AvailableDateUpdateRequest request) {
+    public ResultData<AvailableDateResponse> updateAvailableDate(AvailableDateUpdateRequest request) {
         AvailableDate availableDate = availableDateRepo.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(Msg.AVAILABLE_DATE_NOT_FOUND));
         availableDate.setDate(request.getDate());
         AvailableDate updatedAvailableDate = availableDateRepo.save(availableDate);
-        return modelMapper.map(updatedAvailableDate, AvailableDateResponse.class);
+
+        // Manuel dönüşüm
+        AvailableDateResponse response = new AvailableDateResponse();
+        response.setId(updatedAvailableDate.getId());
+        response.setDoctorId(updatedAvailableDate.getDoctor().getDoctorId());
+        response.setDate(updatedAvailableDate.getDate());
+
+        return new ResultData<>(true, Msg.OK, "200", response);
     }
 
     @Override
-    public List<AvailableDateResponse> getAvailableDatesByDoctor(Long doctorId) {
-        List<AvailableDate> availableDates = availableDateRepo.findByDoctor_DoctorId(doctorId);
-        return availableDates.stream()
-                .map(date -> modelMapper.map(date, AvailableDateResponse.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<AvailableDateResponse> getAllAvailableDates() { // Yeni yöntem
+    public ResultData<List<AvailableDateResponse>> getAllAvailableDates() {
         List<AvailableDate> availableDates = availableDateRepo.findAll();
-        return availableDates.stream()
-                .map(date -> modelMapper.map(date, AvailableDateResponse.class))
+        List<AvailableDateResponse> responses = availableDates.stream()
+                .map(date -> {
+                    AvailableDateResponse response = new AvailableDateResponse();
+                    response.setId(date.getId());
+                    response.setDoctorId(date.getDoctor().getDoctorId());
+                    response.setDate(date.getDate());
+                    return response;
+                })
                 .collect(Collectors.toList());
+
+        return new ResultData<>(true, Msg.OK, "200", responses);
+    }
+
+
+
+    @Override
+    public ResultData<String> deleteAvailableDate(Long id) {
+        AvailableDate availableDate = availableDateRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException(Msg.AVAILABLE_DATE_NOT_FOUND));
+
+        availableDateRepo.delete(availableDate);
+        return new ResultData<>(true, Msg.AVAILABLE_DATE_DELETED, "200","deleted");
     }
 
     @Override
-    public boolean isDoctorAvailable(Long doctorId, LocalDate date) {
-        boolean exists = availableDateRepo.existsByDoctor_DoctorIdAndDate(doctorId, date);
-        System.out.println("Doctor ID: " + doctorId + ", Date: " + date + ", Exists: " + exists + ", Available: " + !exists);
-        return !exists; // Eğer kayıt varsa, doktor müsait değil
+    public ResultData<List<AvailableDateResponse>> getAvailableDatesByDoctor(Long doctorId) {
+        List<AvailableDate> availableDates = availableDateRepo.findByDoctor_DoctorId(doctorId);
+        List<AvailableDateResponse> responses = availableDates.stream()
+                .map(date -> {
+                    AvailableDateResponse response = new AvailableDateResponse();
+                    response.setId(date.getId());
+                    response.setDoctorId(date.getDoctor().getDoctorId());
+                    response.setDate(date.getDate());
+                    return response;
+                })
+                .collect(Collectors.toList());
+
+        return new ResultData<>(true, Msg.OK, "200", responses);
+    }
+
+    @Override
+    public ResultData<Boolean> isDoctorAvailable(long doctorId, LocalDate date) {
+        boolean isAvailable = availableDateRepo.existsByDoctor_DoctorIdAndDate(doctorId, date);
+
+        if (!isAvailable) {
+            // Doktor belirtilen tarihte müsait değilse
+            return new ResultData<>(false, Msg.DOCTOR_NOT_AVAILABLE, "404", false);
+        }
+
+        // Doktor belirtilen tarihte müsaitse
+        return new ResultData<>(true, Msg.DOCTOR_AVAILABILITY_CHECKED, "200", true);
     }
 }

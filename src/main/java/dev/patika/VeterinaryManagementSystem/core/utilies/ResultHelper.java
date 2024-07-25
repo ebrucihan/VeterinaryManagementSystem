@@ -22,7 +22,7 @@ public class ResultHelper {
         return new Result(false, Msg.ERROR, "400");
     }
 
-    public static <T> ResultData<T> ok(T data){
+    public static <T> ResultData<T> ok(T data) {
         return new ResultData<>(true, Msg.OK, "200", data);
     }
 
@@ -37,4 +37,11 @@ public class ResultHelper {
     public static <T> ResultData<T> internalServerError(T data, String message) {
         return new ResultData<>(false, message, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), data);
     }
+    // Yeni eklenen metot
+    public static Result deleted(String message) {
+        return new Result(true, message, "200");
+
+    }
+
+
 }

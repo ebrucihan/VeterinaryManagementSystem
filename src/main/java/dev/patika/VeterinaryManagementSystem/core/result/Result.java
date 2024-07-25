@@ -2,8 +2,10 @@ package dev.patika.VeterinaryManagementSystem.core.result;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Result {
 
     private boolean status;
@@ -20,5 +22,10 @@ public class Result {
         this.status = status;
         this.message = message;
         this.code = String.valueOf(value);
+    }
+
+    // Yeni eklenen metod
+    public boolean isSuccess() {
+        return status;
     }
 }

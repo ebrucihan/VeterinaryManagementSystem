@@ -7,9 +7,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AppointmentRepo extends JpaRepository<Appointment,Long> {
-    List<Appointment> findByDoctor_DoctorIdAndAppointmentDateTimeBetween(Long doctor, LocalDateTime startDateTime, LocalDateTime endDateTime);
-    List<Appointment> findByAnimal_AnimalIdAndAppointmentDateTimeBetween(Long animal, LocalDateTime startDateTime, LocalDateTime endDateTime);
-    boolean existsByDoctor_DoctorIdAndAppointmentDateTime(Long doctorId, LocalDateTime appointmentDateTime);
-    boolean existsByDoctor_DoctorIdAndAppointmentDateTimeAndAppointmentIdNot(Long doctorId, LocalDateTime appointmentDateTime, Long appointmentId);
+    boolean existsByDoctor_DoctorIdAndAppointmentDateTime(long doctorId, LocalDateTime appointmentDateTime);
+
+    boolean existsByDoctor_DoctorIdAndAppointmentDateTimeBetween(long doctorId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    boolean existsByDoctor_DoctorIdAndAppointmentDateTimeAndAppointmentIdNot(long doctorId, LocalDateTime appointmentDateTime, long appointmentId);
+
+    List<Appointment> findByDoctor_DoctorIdAndAppointmentDateTimeAfter(long doctorId, LocalDateTime startDateTime);
+
+    List<Appointment> findByAnimal_AnimalIdAndAppointmentDateTimeAfter(long animalId, LocalDateTime startDateTime);
+
+    List<Appointment> findByDoctor_DoctorIdAndAppointmentDateTimeGreaterThanEqual(long doctorId, LocalDateTime startDateTime);
+    List<Appointment> findByAnimal_AnimalIdAndAppointmentDateTimeGreaterThanEqual(long animalId, LocalDateTime startDateTime);
 
 }

@@ -1,5 +1,6 @@
 package dev.patika.VeterinaryManagementSystem.business.abstracts;
 
+import dev.patika.VeterinaryManagementSystem.core.result.Result;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalSaveRequest;
 import dev.patika.VeterinaryManagementSystem.dto.request.animal.AnimalUpdateRequest;
@@ -17,7 +18,7 @@ public interface IAnimalService {
 
     AnimalResponse getAnimalById(long animalId);
 
-    void deleteAnimalById(long animalId);
+    Result deleteAnimalById(long animalId);
 
     List<AnimalResponse> getAnimalsByName(String animalName);
 

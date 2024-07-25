@@ -46,7 +46,6 @@ public class Animal {
     // Many animals can belong to one customer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     private Customer customer;
 
 

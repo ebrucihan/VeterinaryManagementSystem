@@ -1,10 +1,13 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAvailableDateService;
+import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateSaveRequest;
 import dev.patika.VeterinaryManagementSystem.dto.request.availabledate.AvailableDateUpdateRequest;
 import dev.patika.VeterinaryManagementSystem.dto.response.availabledate.AvailableDateResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,34 +25,45 @@ public class AvailableDateController {
     }
 
     @PostMapping
-    public ResponseEntity<AvailableDateResponse> addAvailableDate(@RequestBody AvailableDateSaveRequest request) {
-        AvailableDateResponse response = availableDateService.addAvailableDate(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResultData<AvailableDateResponse>> addAvailableDate(
+            @Valid @RequestBody AvailableDateSaveRequest request) {
+        ResultData<AvailableDateResponse> result = availableDateService.addAvailableDate(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AvailableDateResponse> updateAvailableDate(@RequestBody AvailableDateUpdateRequest request) {
-        AvailableDateResponse response = availableDateService.updateAvailableDate(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResultData<AvailableDateResponse>> updateAvailableDate(
+            @PathVariable Long id,
+            @Valid @RequestBody AvailableDateUpdateRequest request) {
+        request.setId(id);
+        ResultData<AvailableDateResponse> result = availableDateService.updateAvailableDate(request);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public ResponseEntity<List<AvailableDateResponse>> getAllAvailableDates() { // Yeni endpoint
-        List<AvailableDateResponse> response = availableDateService.getAllAvailableDates();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResultData<List<AvailableDateResponse>>> getAllAvailableDates() {
+        ResultData<List<AvailableDateResponse>> result = availableDateService.getAllAvailableDates();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/by-doctor/{doctorId}")
-    public ResponseEntity<List<AvailableDateResponse>> getAvailableDatesByDoctor(@PathVariable Long doctorId) {
-        List<AvailableDateResponse> response = availableDateService.getAvailableDatesByDoctor(doctorId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResultData<List<AvailableDateResponse>>> getAvailableDatesByDoctor(
+            @PathVariable Long doctorId) {
+        ResultData<List<AvailableDateResponse>> result = availableDateService.getAvailableDatesByDoctor(doctorId);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/is-available")
-    public ResponseEntity<Boolean> isDoctorAvailable(
+    public ResponseEntity<ResultData<Boolean>> isDoctorAvailable(
             @RequestParam Long doctorId,
             @RequestParam LocalDate date) {
-        boolean isAvailable = availableDateService.isDoctorAvailable(doctorId, date);
-        return ResponseEntity.ok(isAvailable);
+        ResultData<Boolean> result = availableDateService.isDoctorAvailable(doctorId, date);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResultData<String>> deleteAvailableDate(@PathVariable Long id) {
+        ResultData<String> result = availableDateService.deleteAvailableDate(id);
+        return ResponseEntity.ok(result);
     }
 }

@@ -14,4 +14,6 @@ public class AvailableDateSaveRequest {
 
     @NotNull
     private LocalDate date;
+
+
 }
