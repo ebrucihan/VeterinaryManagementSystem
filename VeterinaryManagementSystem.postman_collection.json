@@ -1,0 +1,1145 @@
+{
+	"info": {
+		"_postman_id": "78f6e5d9-878c-48ac-b5d6-e3584f2eedb7",
+		"name": "VeterinaryManagementSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36811113"
+	},
+	"item": [
+		{
+			"name": "Animal",
+			"item": [
+				{
+					"name": "Save Animal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animalName\": \"Luna\",\r\n    \"animalSpecies\": \"Dog\",\r\n    \"animalBreed\": \"Golden Retriever\",\r\n    \"animalGender\": \"Female\",\r\n    \"animalColour\": \"Golden\",\r\n    \"animalDateOfBirth\": \"2019-11-02\",\r\n    \"customerId\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/animals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Animal",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animalName\": \"Luna\",\r\n    \"animalSpecies\": \"Dog\",\r\n    \"animalBreed\": \"Golden Retriever\",\r\n    \"animalGender\": \"Male\",\r\n    \"animalColour\": \"Golden\",\r\n    \"animalDateOfBirth\": \"2019-11-02\",\r\n    \"customerId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/animals/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Animal ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animals/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Animal Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animals/search?animalName=Luna",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals",
+								"search"
+							],
+							"query": [
+								{
+									"key": "animalName",
+									"value": "Bella",
+									"disabled": true
+								},
+								{
+									"key": "animalName",
+									"value": "Max",
+									"disabled": true
+								},
+								{
+									"key": "animalName",
+									"value": "Coco",
+									"disabled": true
+								},
+								{
+									"key": "animalName",
+									"value": "Oscar",
+									"disabled": true
+								},
+								{
+									"key": "animalName",
+									"value": "Luna"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animals/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animals",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Save Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerName\": \"Franklin Green\",\r\n    \"customerPhone\": \"+9876543210\",\r\n    \"customerMail\": \"franklin.green@example.com\",\r\n    \"customerAddress\": \"987 Cedar Boulevard\",\r\n    \"customerCity\": \"Riverside\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"customerName\": \"Franklin Green\",\r\n    \"customerPhone\": \"+98765432101\",\r\n    \"customerMail\": \"franklin.green@example.com\",\r\n    \"customerAddress\": \"987 Cedar Boulevard\",\r\n    \"customerCity\": \"Riverside\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/customers/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customer Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/search?customerName=Franklin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"search"
+							],
+							"query": [
+								{
+									"key": "customerName",
+									"value": "John",
+									"disabled": true
+								},
+								{
+									"key": "customerName",
+									"value": "Eva",
+									"disabled": true
+								},
+								{
+									"key": "customerName",
+									"value": "Carol",
+									"disabled": true
+								},
+								{
+									"key": "customerName",
+									"value": "Bob",
+									"disabled": true
+								},
+								{
+									"key": "customerName",
+									"value": "Franklin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customer Animal ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/4/animals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"4",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vaccine",
+			"item": [
+				{
+					"name": "Save Vaccine",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vaccineName\": \"Broad-Spectrum Animal Vaccine\",\r\n    \"vaccineCode\": \"BSAV004\",\r\n    \"protectionStartDate\": \"2025-04-30\",\r\n    \"protectionFinishDate\": \"2025-10-29\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/vaccines",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"vaccines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vaccine",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vaccineName\": \"Broad-Spectrum Animal Vaccine\",\r\n    \"vaccineCode\": \"BSAV004\",\r\n    \"protectionStartDate\": \"2025-04-30\",\r\n    \"protectionFinishDate\": \"2025-10-29\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/vaccines/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"vaccines",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/vaccines",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"vaccines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/vaccines/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"vaccines",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/vaccines/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"vaccines",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AnimalVaccine",
+			"item": [
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animalId\": 8,\r\n    \"vaccineId\": 7,\r\n    \"applicationDate\": \"2025-04-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/animal-vaccines",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animal-vaccines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animalId\": 1,\r\n    \"vaccineId\": 1,\r\n    \"applicationDate\": \"2023-02-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/animal-vaccines/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animal-vaccines",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Animal ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animal-vaccines/by-animal/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animal-vaccines",
+								"by-animal",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Date AnimalVaccine",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/animal-vaccines/by-protection-period?startDate=2023-07-15&endDate=2024-01-14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"animal-vaccines",
+								"by-protection-period"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2023-01-10",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2023-06-30",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2023-07-15"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-01-14"
+								},
+								{
+									"key": "startDate",
+									"value": "2024-02-20",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2024-08-19",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2024-09-25",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2025-03-24",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2025-04-30",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2025-10-29",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctor",
+			"item": [
+				{
+					"name": "Save Doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorName\": \"Dr. Emily Clark\",\r\n    \"doctorPhone\": \"555-012-5678\",\r\n    \"doctorMail\": \"emily.clark@veterinaryclinic.com\",\r\n    \"doctorAddress\": \"59 Cedar Street, Greenfield\",\r\n    \"doctorCity\": \"Greenfield\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/doctors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"doctors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorName\": \"Dr. Emily Clark\",\r\n    \"doctorPhone\": \"555-012-56789\",\r\n    \"doctorMail\": \"emily.clark@veterinaryclinic.com\",\r\n    \"doctorAddress\": \"59 Cedar Street, Greenfield\",\r\n    \"doctorCity\": \"Greenfield\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/doctors/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"doctors",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/doctors/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"doctors",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/doctors/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"doctors",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/doctors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"doctors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Appointment",
+			"item": [
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animal\": 8,\r\n    \"doctor\": 5,\r\n    \"appointmentDateTime\": \"2025-04-30T12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animal\": 1,\r\n    \"doctor\": 1,\r\n    \"appointmentDateTime\": \"2023-01-10T15:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointment ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctor Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/doctor?doctorId=1&startDateTime=2023-01-10T14:00:00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"doctor"
+							],
+							"query": [
+								{
+									"key": "doctorId",
+									"value": "1"
+								},
+								{
+									"key": "startDateTime",
+									"value": "2023-01-10T14:00:00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Animal Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/animal?animalId=1&startDateTime=2023-01-10T14:00:00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"animal"
+							],
+							"query": [
+								{
+									"key": "animalId",
+									"value": "1"
+								},
+								{
+									"key": "startDateTime",
+									"value": "2023-01-10T14:00:00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AvailableDate",
+			"item": [
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": 5,\r\n    \"date\": \"2025-04-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": 5,\r\n    \"date\": \"2025-04-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates/by-doctor/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates",
+								"by-doctor",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DateAvailable Doctor",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates/is-available?doctorId=1&date=2023-01-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates",
+								"is-available"
+							],
+							"query": [
+								{
+									"key": "doctorId",
+									"value": "1"
+								},
+								{
+									"key": "date",
+									"value": "2023-01-10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/available-dates/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"available-dates",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
