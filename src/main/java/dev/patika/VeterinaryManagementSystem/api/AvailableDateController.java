@@ -24,6 +24,7 @@ public class AvailableDateController {
         this.availableDateService = availableDateService;
     }
 
+    // Add a new available date for a doctor
     @PostMapping
     public ResponseEntity<ResultData<AvailableDateResponse>> addAvailableDate(
             @Valid @RequestBody AvailableDateSaveRequest request) {
@@ -31,6 +32,7 @@ public class AvailableDateController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
+    // Update an existing available date
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<AvailableDateResponse>> updateAvailableDate(
             @PathVariable Long id,
@@ -40,12 +42,14 @@ public class AvailableDateController {
         return ResponseEntity.ok(result);
     }
 
+    // Get all available dates
     @GetMapping
     public ResponseEntity<ResultData<List<AvailableDateResponse>>> getAllAvailableDates() {
         ResultData<List<AvailableDateResponse>> result = availableDateService.getAllAvailableDates();
         return ResponseEntity.ok(result);
     }
 
+    // Get available dates for a specific doctor
     @GetMapping("/by-doctor/{doctorId}")
     public ResponseEntity<ResultData<List<AvailableDateResponse>>> getAvailableDatesByDoctor(
             @PathVariable Long doctorId) {
@@ -53,6 +57,7 @@ public class AvailableDateController {
         return ResponseEntity.ok(result);
     }
 
+    // Check if a specific doctor is available on a given date
     @GetMapping("/is-available")
     public ResponseEntity<ResultData<Boolean>> isDoctorAvailable(
             @RequestParam Long doctorId,
@@ -61,6 +66,7 @@ public class AvailableDateController {
         return ResponseEntity.ok(result);
     }
 
+    // Delete an available date by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<String>> deleteAvailableDate(@PathVariable Long id) {
         ResultData<String> result = availableDateService.deleteAvailableDate(id);

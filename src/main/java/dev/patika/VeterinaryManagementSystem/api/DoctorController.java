@@ -1,6 +1,5 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
-
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IDoctorService;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.core.utilies.Msg;
@@ -25,6 +24,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
+    // Save a new doctor
     @PostMapping
     public ResponseEntity<DoctorResponse> save(@RequestBody DoctorSaveRequest request) {
         ResultData<DoctorResponse> resultData = doctorService.save(request);
@@ -33,6 +33,7 @@ public class DoctorController {
                 .body(response); // Created message is handled in ResultData
     }
 
+    // Update an existing doctor
     @PutMapping("/{id}")
     public ResponseEntity<DoctorResponse> update(
             @PathVariable long id,
@@ -43,6 +44,7 @@ public class DoctorController {
                 .body(response); // Updated message is handled in ResultData
     }
 
+    // Get a doctor by ID
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponse> getById(@PathVariable long id) {
         ResultData<DoctorResponse> resultData = doctorService.getById(id);
@@ -51,6 +53,7 @@ public class DoctorController {
                 .body(response); // OK message is handled in ResultData
     }
 
+    // Get all doctors
     @GetMapping
     public ResponseEntity<List<DoctorResponse>> getAll() {
         ResultData<List<DoctorResponse>> resultData = doctorService.getAll();
@@ -58,6 +61,7 @@ public class DoctorController {
                 .body(resultData.getData()); // OK message is handled in ResultData
     }
 
+    // Delete a doctor by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
         ResultData<Void> resultData = doctorService.delete(id);

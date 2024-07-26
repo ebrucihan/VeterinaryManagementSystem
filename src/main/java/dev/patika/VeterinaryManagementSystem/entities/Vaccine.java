@@ -17,18 +17,19 @@ public class Vaccine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vaccineId;
+    private Long vaccineId; // Unique identifier for the vaccine
 
     @Column(nullable = false)
-    private String vaccineName;
+    private String vaccineName; // Name of the vaccine
 
     @Column(nullable = false)
-    private String vaccineCode;
+    private String vaccineCode; // Code of the vaccine
 
     @Column(name = "protection_start_date", nullable = false)
-    private LocalDate protectionStartDate;
+    private LocalDate protectionStartDate; // Start date of the vaccine's protection period
 
     @Column(name = "protection_finish_date", nullable = false)
-    private LocalDate protectionFinishDate;
-
+    private LocalDate protectionFinishDate; // End date of the vaccine's protection period
 }
+
+

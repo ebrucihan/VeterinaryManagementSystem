@@ -1,6 +1,5 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
-
 import dev.patika.VeterinaryManagementSystem.business.abstracts.ICustomerService;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.dto.request.customer.CustomerSaveRequest;
@@ -19,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/customers")
 public class CustomerController {
 
-
     private final ICustomerService customerService;
 
     @Autowired
@@ -27,12 +25,14 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    // Add a new customer
     @PostMapping
     public ResponseEntity<ResultData<CustomerResponse>> addCustomer(@Valid @RequestBody CustomerSaveRequest request) {
         ResultData<CustomerResponse> result = customerService.addCustomer(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
+    // Update an existing customer
     @PutMapping("/{customerId}")
     public ResponseEntity<ResultData<CustomerResponse>> updateCustomer(
             @PathVariable Long customerId,
@@ -41,18 +41,21 @@ public class CustomerController {
         return ResponseEntity.ok(result);
     }
 
+    // Get all customers
     @GetMapping
     public ResponseEntity<List<CustomerResponse>> getAllCustomers() {
         List<CustomerResponse> result = customerService.getAllCustomers();
         return ResponseEntity.ok(result);
     }
 
+    // Get a customer by ID
     @GetMapping("/{customerId}")
     public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long customerId) {
         CustomerResponse result = customerService.getCustomerById(customerId);
         return ResponseEntity.ok(result);
     }
 
+    // Delete a customer by ID
     @DeleteMapping("/{customerId}")
     public ResponseEntity<ResultData<String>> deleteCustomer(@PathVariable Long customerId) {
         ResultData<String> result = customerService.deleteCustomerById(customerId);
@@ -60,12 +63,14 @@ public class CustomerController {
         return ResponseEntity.status(status != null ? status : HttpStatus.INTERNAL_SERVER_ERROR).body(result);
     }
 
+    // Search for customers by name
     @GetMapping("/search")
     public ResponseEntity<List<CustomerResponse>> searchCustomersByName(@RequestParam String customerName) {
         List<CustomerResponse> result = customerService.getCustomersByName(customerName);
         return ResponseEntity.ok(result);
     }
 
+    // Get all animals associated with a specific customer ID
     @GetMapping("/{customerId}/animals")
     public ResponseEntity<List<AnimalResponse>> getAnimalsByCustomerId(@PathVariable Long customerId) {
         List<AnimalResponse> result = customerService.getAnimalsByCustomerId(customerId);

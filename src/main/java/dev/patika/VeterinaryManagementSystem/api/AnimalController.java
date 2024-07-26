@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/animals")
 public class AnimalController {
@@ -27,13 +26,13 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
-    // Save an animal
+    // Add a new animal
     @PostMapping
     public ResultData<AnimalResponse> addAnimal(@Valid @RequestBody AnimalSaveRequest request) {
         return animalService.addAnimal(request);
     }
 
-    // Update an animal
+    // Update an existing animal
     @PutMapping("/{animalId}")
     public ResponseEntity<ResultData<AnimalResponse>> updateAnimal(
             @PathVariable Long animalId,
@@ -51,30 +50,28 @@ public class AnimalController {
         return animalService.getAllAnimals();
     }
 
-    // Get animal by ID
+    // Get an animal by ID
     @GetMapping("/{animalId}")
     public ResponseEntity<AnimalResponse> getAnimalById(@PathVariable Long animalId) {
         AnimalResponse animalResponse = animalService.getAnimalById(animalId);
         return ResponseEntity.ok(animalResponse);
     }
 
-    // Delete animal by ID
+    // Delete an animal by ID
     @DeleteMapping("/{animalId}")
     public ResponseEntity<Result> deleteAnimalById(@PathVariable long animalId) {
         Result result = animalService.deleteAnimalById(animalId);
         if (result.isSuccess()) {
-            return ResponseEntity.ok(result);  // HTTP 200 OK with result message
+            return ResponseEntity.ok(result);  // HTTP 200 OK with result message for success
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found with result message
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found with result message for failure
         }
     }
 
-    // Get animals by name
+    // Search for animals by name
     @GetMapping("/search")
     public List<AnimalResponse> getAnimalsByName(@RequestParam String animalName) {
-        // Burada IAnimalService üzerinden ilgili metodu çağırarak isme göre filtreleme yapabiliriz
+        // Call the appropriate method from IAnimalService to filter by name
         return animalService.getAnimalsByName(animalName);
     }
-
-
 }

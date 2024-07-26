@@ -1,6 +1,5 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
-
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IVaccineService;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.dto.request.vaccine.VaccineSaveRequest;
@@ -25,12 +24,14 @@ public class VaccineController {
         this.vaccineService = vaccineService;
     }
 
+    // Add a new vaccine
     @PostMapping
     public ResponseEntity<ResultData<VaccineResponse>> addVaccine(@Valid @RequestBody VaccineSaveRequest request) {
         ResultData<VaccineResponse> result = vaccineService.addVaccine(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
+    // Update an existing vaccine
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<VaccineResponse>> updateVaccine(
             @PathVariable Long id,
@@ -39,18 +40,21 @@ public class VaccineController {
         return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
+    // Get all vaccines
     @GetMapping
     public ResponseEntity<ResultData<List<VaccineResponse>>> getAllVaccines() {
         ResultData<List<VaccineResponse>> result = vaccineService.getAllVaccines();
         return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
+    // Get a vaccine by its ID
     @GetMapping("/{id}")
     public ResponseEntity<ResultData<VaccineResponse>> getVaccineById(@PathVariable Long id) {
         ResultData<VaccineResponse> result = vaccineService.getVaccineById(id);
         return ResponseEntity.ok(result);  // HTTP 200 OK
     }
 
+    // Delete a vaccine by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<String>> deleteVaccine(@PathVariable Long id) {
         ResultData<String> result = vaccineService.deleteVaccine(id);

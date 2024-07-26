@@ -16,17 +16,17 @@ public class AnimalVaccine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Unique identifier for the vaccine record
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "animal_id")
-    private Animal animal;
+    private Animal animal; // Animal that received the vaccine
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaccine_id", nullable = false)
-    private Vaccine vaccine;
+    private Vaccine vaccine; // Vaccine administered to the animal
 
     @Column(name = "application_date", nullable = false)
-    private LocalDate applicationDate;
+    private LocalDate applicationDate; // Date when the vaccine was administered
 
 }

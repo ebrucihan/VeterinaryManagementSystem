@@ -24,7 +24,7 @@ public class Result {
         this.code = String.valueOf(value);
     }
 
-    // Yeni eklenen metod
+
     public boolean isSuccess() {
         return status;
     }

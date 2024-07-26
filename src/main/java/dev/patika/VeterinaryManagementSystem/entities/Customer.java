@@ -20,26 +20,26 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private long customerId;
+    private long customerId; // Unique identifier for the customer
 
     @Column(name = "customer_name")
-    private String customerName;
+    private String customerName; // Name of the customer
 
     @Column(name = "customer_phone")
-    private String customerPhone;
+    private String customerPhone; // Phone number of the customer
 
     @Column(name = "customer_mail")
-    private String customerMail;
+    private String customerMail; // Email address of the customer
 
     @Column(name = "customer_address")
-    private String customerAddress;
+    private String customerAddress; // Address of the customer
 
     @Column(name = "customer_city")
-    private String customerCity;
+    private String customerCity; // City where the customer lives
 
     // One customer can have multiple animals
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @LazyGroup("AnimalDetails")
-    private List<Animal> animals;
+    private List<Animal> animals; // List of animals owned by the customer
 
 }

@@ -10,10 +10,21 @@ import java.util.List;
 
 public interface IDoctorService {
 
+    // Save a new doctor
     ResultData<DoctorResponse> save(DoctorSaveRequest request);
+
+    // Update an existing doctor by their ID
     ResultData<DoctorResponse> update(long id, DoctorUpdateRequest request);
+
+    // Delete a doctor by their ID
     ResultData<Void> delete(long id);
+
+    // Retrieve a specific doctor by their ID
     ResultData<DoctorResponse> getById(long id);
+
+    // Retrieve a list of all doctors
     ResultData<List<DoctorResponse>> getAll();
+
+    // Check if a doctor is available on a specific date
     ResultData<Boolean> isDoctorAvailable(long doctorId, LocalDate date);
 }

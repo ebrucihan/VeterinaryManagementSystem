@@ -1,6 +1,5 @@
 package dev.patika.VeterinaryManagementSystem.business.concretes;
 
-
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAvailableDateService;
 import dev.patika.VeterinaryManagementSystem.core.exception.NotFoundException;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
@@ -34,6 +33,7 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public ResultData<AvailableDateResponse> addAvailableDate(AvailableDateSaveRequest request) {
+        // Find the doctor by ID
         Doctor doctor = doctorRepo.findById(request.getDoctorId())
                 .orElseThrow(() -> new NotFoundException(Msg.DOCTOR_NOT_FOUND));
 
@@ -43,12 +43,13 @@ public class AvailableDateManager implements IAvailableDateService {
             return new ResultData<>(false, Msg.DOCTOR_DATE_ALREADY_EXISTS, "400", null);
         }
 
+        // Create a new AvailableDate object and save it to the database
         AvailableDate availableDate = new AvailableDate();
         availableDate.setDate(request.getDate());
         availableDate.setDoctor(doctor);
         AvailableDate savedAvailableDate = availableDateRepo.save(availableDate);
 
-        // Manuel dönüşüm
+        // Manually create the response object
         AvailableDateResponse response = new AvailableDateResponse();
         response.setId(savedAvailableDate.getId());
         response.setDoctorId(savedAvailableDate.getDoctor().getDoctorId());
@@ -59,12 +60,15 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public ResultData<AvailableDateResponse> updateAvailableDate(AvailableDateUpdateRequest request) {
+        // Find the existing AvailableDate object by ID
         AvailableDate availableDate = availableDateRepo.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(Msg.AVAILABLE_DATE_NOT_FOUND));
+
+        // Update the date of the AvailableDate object
         availableDate.setDate(request.getDate());
         AvailableDate updatedAvailableDate = availableDateRepo.save(availableDate);
 
-        // Manuel dönüşüm
+        // Manually create the response object
         AvailableDateResponse response = new AvailableDateResponse();
         response.setId(updatedAvailableDate.getId());
         response.setDoctorId(updatedAvailableDate.getDoctor().getDoctorId());
@@ -75,7 +79,10 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public ResultData<List<AvailableDateResponse>> getAllAvailableDates() {
+        // Retrieve all available dates
         List<AvailableDate> availableDates = availableDateRepo.findAll();
+
+        // Convert AvailableDate objects to response objects
         List<AvailableDateResponse> responses = availableDates.stream()
                 .map(date -> {
                     AvailableDateResponse response = new AvailableDateResponse();
@@ -89,20 +96,23 @@ public class AvailableDateManager implements IAvailableDateService {
         return new ResultData<>(true, Msg.OK, "200", responses);
     }
 
-
-
     @Override
     public ResultData<String> deleteAvailableDate(Long id) {
+        // Find the AvailableDate object by ID
         AvailableDate availableDate = availableDateRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException(Msg.AVAILABLE_DATE_NOT_FOUND));
 
+        // Delete the AvailableDate object
         availableDateRepo.delete(availableDate);
-        return new ResultData<>(true, Msg.AVAILABLE_DATE_DELETED, "200","deleted");
+        return new ResultData<>(true, Msg.AVAILABLE_DATE_DELETED, "200", "deleted");
     }
 
     @Override
     public ResultData<List<AvailableDateResponse>> getAvailableDatesByDoctor(Long doctorId) {
+        // Retrieve available dates by doctor ID
         List<AvailableDate> availableDates = availableDateRepo.findByDoctor_DoctorId(doctorId);
+
+        // Convert AvailableDate objects to response objects
         List<AvailableDateResponse> responses = availableDates.stream()
                 .map(date -> {
                     AvailableDateResponse response = new AvailableDateResponse();
@@ -118,14 +128,15 @@ public class AvailableDateManager implements IAvailableDateService {
 
     @Override
     public ResultData<Boolean> isDoctorAvailable(long doctorId, LocalDate date) {
+        // Check if the doctor is available on the specified date
         boolean isAvailable = availableDateRepo.existsByDoctor_DoctorIdAndDate(doctorId, date);
 
         if (!isAvailable) {
-            // Doktor belirtilen tarihte müsait değilse
+            // Doctor is not available on the specified date
             return new ResultData<>(false, Msg.DOCTOR_NOT_AVAILABLE, "404", false);
         }
 
-        // Doktor belirtilen tarihte müsaitse
+        // Doctor is available on the specified date
         return new ResultData<>(true, Msg.DOCTOR_AVAILABILITY_CHECKED, "200", true);
     }
 }

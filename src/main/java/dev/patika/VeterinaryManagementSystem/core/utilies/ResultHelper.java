@@ -2,6 +2,7 @@ package dev.patika.VeterinaryManagementSystem.core.utilies;
 
 import dev.patika.VeterinaryManagementSystem.core.result.Result;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
+import dev.patika.VeterinaryManagementSystem.dto.response.vaccine.VaccineResponse;
 import org.springframework.http.HttpStatus;
 
 public class ResultHelper {
@@ -37,10 +38,14 @@ public class ResultHelper {
     public static <T> ResultData<T> internalServerError(T data, String message) {
         return new ResultData<>(false, message, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), data);
     }
-    // Yeni eklenen metot
+
     public static Result deleted(String message) {
         return new Result(true, message, "200");
 
+    }
+
+    public static <T> ResultData<T> protectionPeriodNotFinishedError(String message) {
+        return new ResultData<>(false, message, "400", null);
     }
 
 

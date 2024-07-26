@@ -43,35 +43,37 @@ public class AnimalManager implements IAnimalService {
             throw new NotFoundException("Customer not found with ID: " + request.getCustomerId());
         }
 
-        // Check if animal with the same name and customerId already exists
+        // Check if an animal with the same name and customerId already exists
         if (animalRepo.existsByAnimalNameAndCustomer_CustomerId(request.getAnimalName(), request.getCustomerId())) {
             throw new IllegalArgumentException("Animal with the same name already exists for this customer.");
         }
 
-        // Create and save the animal manually
+        // Create and save the animal entity
         Animal animal = new Animal();
         animal.setAnimalName(request.getAnimalName());
-        animal.setAnimalSpecies(request.getAnimalSpecies()); // Hayvan türü
-        animal.setAnimalBreed(request.getAnimalBreed()); // Hayvan ırkı
-        animal.setAnimalGender(request.getAnimalGender()); // Hayvan cinsiyeti
-        animal.setAnimalColour(request.getAnimalColour()); // Hayvan rengi
-        animal.setAnimalDateOfBirth(request.getAnimalDateOfBirth()); // Hayvan doğum tarihi
+        animal.setAnimalSpecies(request.getAnimalSpecies()); // Set animal species
+        animal.setAnimalBreed(request.getAnimalBreed()); // Set animal breed
+        animal.setAnimalGender(request.getAnimalGender()); // Set animal gender
+        animal.setAnimalColour(request.getAnimalColour()); // Set animal color
+        animal.setAnimalDateOfBirth(request.getAnimalDateOfBirth()); // Set animal date of birth
 
+        // Fetch the customer entity and associate it with the animal
         Customer customer = customerRepo.findById(request.getCustomerId()).orElseThrow(() ->
                 new NotFoundException("Customer not found with ID: " + request.getCustomerId()));
         animal.setCustomer(customer);
 
+        // Save the animal and create the response
         Animal savedAnimal = animalRepo.save(animal);
 
         // Create the response manually
         AnimalResponse response = new AnimalResponse();
         response.setAnimalId(savedAnimal.getAnimalId());
         response.setAnimalName(savedAnimal.getAnimalName());
-        response.setAnimalSpecies(savedAnimal.getAnimalSpecies()); // Hayvan türü
-        response.setAnimalBreed(savedAnimal.getAnimalBreed()); // Hayvan ırkı
-        response.setAnimalGender(savedAnimal.getAnimalGender()); // Hayvan cinsiyeti
-        response.setAnimalColour(savedAnimal.getAnimalColour()); // Hayvan rengi
-        response.setAnimalDateOfBirth(savedAnimal.getAnimalDateOfBirth()); // Hayvan doğum tarihi
+        response.setAnimalSpecies(savedAnimal.getAnimalSpecies()); // Set animal species
+        response.setAnimalBreed(savedAnimal.getAnimalBreed()); // Set animal breed
+        response.setAnimalGender(savedAnimal.getAnimalGender()); // Set animal gender
+        response.setAnimalColour(savedAnimal.getAnimalColour()); // Set animal color
+        response.setAnimalDateOfBirth(savedAnimal.getAnimalDateOfBirth()); // Set animal date of birth
         response.setCustomerId(savedAnimal.getCustomer().getCustomerId());
 
         return ResultHelper.created(response, Msg.ANIMAL_CREATED);
@@ -79,19 +81,19 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public ResultData<AnimalResponse> updateAnimal(long animalId, AnimalUpdateRequest updateRequest) {
-        // Fetch the existing animal
+        // Fetch the existing animal entity
         Optional<Animal> optionalAnimal = animalRepo.findById(animalId);
         if (!optionalAnimal.isPresent()) {
             throw new NotFoundException("Animal not found with ID: " + animalId);
         }
         Animal existingAnimal = optionalAnimal.get();
 
-        // Validate customer ID
+        // Validate that the customer ID cannot be changed
         if (updateRequest.getCustomerId() != null && !updateRequest.getCustomerId().equals(existingAnimal.getCustomer().getCustomerId())) {
             throw new IllegalArgumentException("Customer ID cannot be changed.");
         }
 
-        // Update fields manually
+        // Update the animal fields with the new data
         if (updateRequest.getAnimalName() != null) {
             existingAnimal.setAnimalName(updateRequest.getAnimalName());
         }
@@ -111,7 +113,7 @@ public class AnimalManager implements IAnimalService {
             existingAnimal.setAnimalDateOfBirth(updateRequest.getAnimalDateOfBirth());
         }
 
-        // Save the updated animal
+        // Save the updated animal and create the response
         Animal updatedAnimal = animalRepo.save(existingAnimal);
 
         // Create the response manually
@@ -125,15 +127,16 @@ public class AnimalManager implements IAnimalService {
         response.setAnimalDateOfBirth(updatedAnimal.getAnimalDateOfBirth());
         response.setCustomerId(updatedAnimal.getCustomer().getCustomerId());
 
-        // Return the result
         return new ResultData<>(true, Msg.ANIMAL_UPDATED, "200", response);
     }
 
     @Override
     public List<AnimalResponse> getAllAnimals() {
+        // Retrieve all animals from the repository
         List<Animal> animals = animalRepo.findAll();
         return animals.stream()
                 .map(animal -> {
+                    // Map each animal to an AnimalResponse
                     AnimalResponse response = new AnimalResponse();
                     response.setAnimalId(animal.getAnimalId());
                     response.setAnimalName(animal.getAnimalName());
@@ -150,6 +153,7 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public AnimalResponse getAnimalById(long animalId) {
+        // Fetch a specific animal by ID
         Animal animal = animalRepo.findById(animalId)
                 .orElseThrow(() -> new NotFoundException(Msg.ANIMAL_NOT_FOUND + " with ID: " + animalId));
         AnimalResponse response = new AnimalResponse();
@@ -166,6 +170,7 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public Result deleteAnimalById(long animalId) {
+        // Check if the animal exists and delete it
         Optional<Animal> optionalAnimal = animalRepo.findById(animalId);
         if (!optionalAnimal.isPresent()) {
             throw new NotFoundException(Msg.ANIMAL_NOT_FOUND + " with ID: " + animalId);
@@ -176,12 +181,14 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public List<AnimalResponse> getAnimalsByName(String animalName) {
+        // Find animals by name
         List<Animal> animals = animalRepo.findByAnimalNameContainingIgnoreCase(animalName);
         if (animals.isEmpty()) {
             throw new NotFoundException(Msg.ANIMAL_NOT_FOUND + " with name containing: " + animalName);
         }
         return animals.stream()
                 .map(animal -> {
+                    // Map each animal to an AnimalResponse
                     AnimalResponse response = new AnimalResponse();
                     response.setAnimalId(animal.getAnimalId());
                     response.setAnimalName(animal.getAnimalName());

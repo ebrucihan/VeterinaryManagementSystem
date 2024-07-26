@@ -18,28 +18,23 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "doctor_id")
-    private Long doctorId;
+    private Long doctorId; // Unique identifier for the doctor
 
     @Column(name = "doctor_name")
-    private String doctorName;
+    private String doctorName; // Name of the doctor
 
     @Column(name = "doctor_phone")
-    private String doctorPhone;
+    private String doctorPhone; // Phone number of the doctor
 
     @Column(name = "doctor_mail")
-    private String doctorMail;
+    private String doctorMail; // Email address of the doctor
 
     @Column(name = "doctor_address")
-    private String doctorAddress;
+    private String doctorAddress; // Address of the doctor
 
     @Column(name = "doctor_city")
-    private String doctorCity;
+    private String doctorCity; // City where the doctor practices
 
     @OneToMany(mappedBy = "doctor")
-    private List<AvailableDate> availableDates;
-
-
-
-
-
+    private List<AvailableDate> availableDates; // List of available dates for the doctor
 }

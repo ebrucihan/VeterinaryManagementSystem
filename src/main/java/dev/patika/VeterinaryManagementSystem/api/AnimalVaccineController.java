@@ -1,8 +1,6 @@
 package dev.patika.VeterinaryManagementSystem.api;
 
-
 import dev.patika.VeterinaryManagementSystem.business.abstracts.IAnimalVaccineService;
-import dev.patika.VeterinaryManagementSystem.business.concretes.AnimalVaccineManager;
 import dev.patika.VeterinaryManagementSystem.core.result.ResultData;
 import dev.patika.VeterinaryManagementSystem.dto.request.animalvaccine.AnimalVaccineSaveRequest;
 import dev.patika.VeterinaryManagementSystem.dto.request.animalvaccine.AnimalVaccineUpdateRequest;
@@ -28,12 +26,14 @@ public class AnimalVaccineController {
         this.animalVaccineService = animalVaccineService;
     }
 
+    // Add a new animal vaccine
     @PostMapping
     public ResponseEntity<ResultData<AnimalVaccineResponse>> addAnimalVaccine(@Valid @RequestBody AnimalVaccineSaveRequest request) {
         ResultData<AnimalVaccineResponse> result = animalVaccineService.addAnimalVaccine(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);  // HTTP 201 Created
     }
 
+    // Update an existing animal vaccine
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<AnimalVaccineResponse>> updateAnimalVaccine(
             @PathVariable("id") Long id,
@@ -42,6 +42,7 @@ public class AnimalVaccineController {
         return ResponseEntity.ok(result);
     }
 
+    // Get vaccines for a specific animal by its ID
     @GetMapping("/by-animal/{animalId}")
     public ResponseEntity<List<AnimalVaccineResponse>> getAnimalVaccinesByAnimalId(
             @PathVariable("animalId") Long animalId) {
@@ -49,6 +50,7 @@ public class AnimalVaccineController {
         return ResponseEntity.ok(result);
     }
 
+    // Get vaccines by protection period
     @GetMapping("/by-protection-period")
     public ResponseEntity<List<AnimalVaccineResponse>> getAnimalVaccinesByProtectionPeriod(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -57,6 +59,7 @@ public class AnimalVaccineController {
         return ResponseEntity.ok(result);
     }
 
+    // Delete an animal vaccine by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<String>> deleteAnimalVaccine(@PathVariable("id") Long id) {
         ResultData<String> result = animalVaccineService.deleteAnimalVaccine(id);

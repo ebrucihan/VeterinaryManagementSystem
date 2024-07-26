@@ -15,11 +15,17 @@ public class ModelManagerService implements IModelMapperService {
         this.modelMapper = modelMapper;
     }
 
+     // Configures the ModelMapper instance for request mappings.
+    // Sets the ambiguity to be ignored and uses strict matching strategy.
+
     @Override
     public ModelMapper forRequest() {
         this.modelMapper.getConfiguration().setAmbiguityIgnored(true).setMatchingStrategy(MatchingStrategies.STRICT);
         return this.modelMapper;
     }
+
+    //Configures the ModelMapper instance for response mappings.
+    // Sets the ambiguity to be ignored and uses strict matching strategy
 
     @Override
     public ModelMapper forResponse() {

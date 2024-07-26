@@ -13,7 +13,6 @@ import dev.patika.VeterinaryManagementSystem.dto.response.appointment.Appointmen
 import dev.patika.VeterinaryManagementSystem.entities.Animal;
 import dev.patika.VeterinaryManagementSystem.entities.Appointment;
 import dev.patika.VeterinaryManagementSystem.entities.Doctor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +26,12 @@ import java.util.stream.Collectors;
 public class AppointmentManager implements IAppointmentService {
 
     private final AppointmentRepo appointmentRepo;
-    private final ModelMapper modelMapper;
     private final DoctorManager doctorManager;
     private final IAvailableDateService availableDateService;
 
     @Autowired
-    public AppointmentManager(AppointmentRepo appointmentRepo, ModelMapper modelMapper, DoctorManager doctorManager, IAvailableDateService availableDateService) {
+    public AppointmentManager(AppointmentRepo appointmentRepo, DoctorManager doctorManager, IAvailableDateService availableDateService) {
         this.appointmentRepo = appointmentRepo;
-        this.modelMapper = modelMapper;
         this.doctorManager = doctorManager;
         this.availableDateService = availableDateService;
     }
@@ -42,12 +39,14 @@ public class AppointmentManager implements IAppointmentService {
     @Override
     @Transactional(rollbackFor = {ScheduleConflictException.class, RuntimeException.class})
     public ResultData<AppointmentResponse> createAppointment(AppointmentSaveRequest request) {
+        // Create Animal and Doctor objects from request
         Animal animal = new Animal();
         animal.setAnimalId(request.getAnimal());
 
         Doctor doctor = new Doctor();
         doctor.setDoctorId(request.getDoctor());
 
+        // Extract appointment date and time from request
         LocalDateTime appointmentDateTime = request.getAppointmentDateTime();
         LocalDate appointmentDate = appointmentDateTime.toLocalDate();  // Extract LocalDate
 
@@ -70,8 +69,12 @@ public class AppointmentManager implements IAppointmentService {
 
         appointment = appointmentRepo.save(appointment);
 
-        // Map the response
-        AppointmentResponse response = modelMapper.map(appointment, AppointmentResponse.class);
+        // Create and return response object
+        AppointmentResponse response = new AppointmentResponse();
+        response.setAppointmentId(appointment.getAppointmentId());
+        response.setAnimalId(appointment.getAnimal().getAnimalId());
+        response.setDoctorId(appointment.getDoctor().getDoctorId());
+        response.setAppointmentDateTime(appointment.getAppointmentDateTime());
 
         return new ResultData<>(true, Msg.APPOINTMENT_CREATED, "201", response);
     }
@@ -79,15 +82,18 @@ public class AppointmentManager implements IAppointmentService {
     @Override
     @Transactional(rollbackFor = {ScheduleConflictException.class, RuntimeException.class})
     public ResultData<AppointmentResponse> updateAppointment(AppointmentUpdateRequest request) {
+        // Find the existing appointment by ID
         Appointment appointment = appointmentRepo.findById(request.getAppointmentId())
                 .orElseThrow(() -> new NotFoundException(Msg.APPOINTMENTS_NOT_FOUND));
 
+        // Create Animal and Doctor objects from request
         Animal animal = new Animal();
         animal.setAnimalId(request.getAnimal());
 
         Doctor doctor = new Doctor();
         doctor.setDoctorId(request.getDoctor());
 
+        // Extract appointment date and time from request
         LocalDateTime appointmentDateTime = request.getAppointmentDateTime();
         LocalDate appointmentDate = appointmentDateTime.toLocalDate();  // Extract LocalDate
 
@@ -104,58 +110,87 @@ public class AppointmentManager implements IAppointmentService {
             return new ResultData<>(false, Msg.APPOINTMENT_CONFLICT, "409", null);
         }
 
-        // Update the appointment
+        // Update the appointment details
         appointment.setAnimal(animal);
         appointment.setDoctor(doctor);
         appointment.setAppointmentDateTime(appointmentDateTime);
 
         appointment = appointmentRepo.save(appointment);
 
-        AppointmentResponse response = modelMapper.map(appointment, AppointmentResponse.class);
+        // Create and return response object
+        AppointmentResponse response = new AppointmentResponse();
+        response.setAppointmentId(appointment.getAppointmentId());
+        response.setAnimalId(appointment.getAnimal().getAnimalId());
+        response.setDoctorId(appointment.getDoctor().getDoctorId());
+        response.setAppointmentDateTime(appointment.getAppointmentDateTime());
 
         return new ResultData<>(true, Msg.APPOINTMENT_UPDATED, "200", response);
     }
 
     @Override
     public ResultData<AppointmentResponse> getAppointmentById(Long appointmentId) {
+        // Find the appointment by ID
         Appointment appointment = appointmentRepo.findById(appointmentId)
                 .orElseThrow(() -> new NotFoundException(Msg.APPOINTMENTS_NOT_FOUND));
-        AppointmentResponse response = modelMapper.map(appointment, AppointmentResponse.class);
+
+        // Create and return response object
+        AppointmentResponse response = new AppointmentResponse();
+        response.setAppointmentId(appointment.getAppointmentId());
+        response.setAnimalId(appointment.getAnimal().getAnimalId());
+        response.setDoctorId(appointment.getDoctor().getDoctorId());
+        response.setAppointmentDateTime(appointment.getAppointmentDateTime());
+
         return new ResultData<>(true, Msg.OK, "200", response);
     }
 
     @Override
     public ResultData<Void> deleteAppointment(Long appointmentId) {
+        // Find the appointment by ID
         Appointment appointment = appointmentRepo.findById(appointmentId)
                 .orElseThrow(() -> new NotFoundException(Msg.APPOINTMENTS_NOT_FOUND));
+
+        // Delete the appointment
         appointmentRepo.delete(appointment);
         return new ResultData<>(true, Msg.APPOINTMENT_DELETED, "200", null);
     }
 
     @Override
-    public ResultData<List<AppointmentResponse>> getAppointments(Long doctor, Long animal, LocalDateTime startDateTime) {
+    public ResultData<List<AppointmentResponse>> getAppointments(Long doctor, Long animal, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         List<Appointment> appointments;
-        if (doctor != null && startDateTime != null) {
-            appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeGreaterThanEqual(doctor, startDateTime);
-        } else if (animal != null && startDateTime != null) {
-            appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeGreaterThanEqual(animal, startDateTime);
+
+        // Retrieve appointments based on provided filters
+        if (doctor != null && startDateTime != null && endDateTime != null) {
+            appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeBetween(doctor, startDateTime, endDateTime);
+        } else if (animal != null && startDateTime != null && endDateTime != null) {
+            appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeBetween(animal, startDateTime, endDateTime);
         } else {
             appointments = appointmentRepo.findAll();
         }
+
+        // Convert appointments to response objects
         List<AppointmentResponse> responses = appointments.stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentResponse.class))
+                .map(appointment -> {
+                    AppointmentResponse response = new AppointmentResponse();
+                    response.setAppointmentId(appointment.getAppointmentId());
+                    response.setAnimalId(appointment.getAnimal().getAnimalId());
+                    response.setDoctorId(appointment.getDoctor().getDoctorId());
+                    response.setAppointmentDateTime(appointment.getAppointmentDateTime());
+                    return response;
+                })
                 .collect(Collectors.toList());
+
         return new ResultData<>(true, Msg.OK, "200", responses);
     }
 
-
     @Override
-    public ResultData<List<AppointmentResponse>> getAppointmentsByDoctorAndDate(Long doctorId, LocalDateTime startDateTime) {
-        if (doctorId == null || startDateTime == null) {
+    public ResultData<List<AppointmentResponse>> getAppointmentsByDoctorAndDate(Long doctorId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // Validate input parameters
+        if (doctorId == null || startDateTime == null || endDateTime == null) {
             return new ResultData<>(false, Msg.INVALID_INPUT, "400", null);
         }
 
-        List<Appointment> appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeAfter(doctorId, startDateTime);
+        // Retrieve appointments based on doctor ID and date range
+        List<Appointment> appointments = appointmentRepo.findByDoctor_DoctorIdAndAppointmentDateTimeBetween(doctorId, startDateTime, endDateTime);
         List<AppointmentResponse> responses = appointments.stream()
                 .map(appointment -> {
                     AppointmentResponse response = new AppointmentResponse();
@@ -167,6 +202,7 @@ public class AppointmentManager implements IAppointmentService {
                 })
                 .collect(Collectors.toList());
 
+        // Handle empty result case
         if (responses.isEmpty()) {
             return new ResultData<>(false, Msg.APPOINTMENTS_NOT_FOUND, "404", responses);
         }
@@ -175,12 +211,14 @@ public class AppointmentManager implements IAppointmentService {
     }
 
     @Override
-    public ResultData<List<AppointmentResponse>> getAppointmentsByAnimalAndDate(Long animalId, LocalDateTime startDateTime) {
-        if (animalId == null || startDateTime == null) {
+    public ResultData<List<AppointmentResponse>> getAppointmentsByAnimalAndDate(Long animalId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // Validate input parameters
+        if (animalId == null || startDateTime == null || endDateTime == null) {
             return new ResultData<>(false, Msg.INVALID_INPUT, "400", null);
         }
 
-        List<Appointment> appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeAfter(animalId, startDateTime);
+        // Retrieve appointments based on animal ID and date range
+        List<Appointment> appointments = appointmentRepo.findByAnimal_AnimalIdAndAppointmentDateTimeBetween(animalId, startDateTime, endDateTime);
         List<AppointmentResponse> responses = appointments.stream()
                 .map(appointment -> {
                     AppointmentResponse response = new AppointmentResponse();
@@ -192,6 +230,7 @@ public class AppointmentManager implements IAppointmentService {
                 })
                 .collect(Collectors.toList());
 
+        // Handle empty result case
         if (responses.isEmpty()) {
             return new ResultData<>(false, Msg.APPOINTMENTS_NOT_FOUND, "404", responses);
         }

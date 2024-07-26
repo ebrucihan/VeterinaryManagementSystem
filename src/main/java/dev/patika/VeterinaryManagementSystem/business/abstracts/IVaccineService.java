@@ -9,10 +9,18 @@ import java.util.List;
 
 public interface IVaccineService {
 
+    // Add a new vaccine
     ResultData<VaccineResponse> addVaccine(VaccineSaveRequest request);
-    ResultData<VaccineResponse> updateVaccine(Long id, VaccineUpdateRequest request);
-    ResultData<VaccineResponse> getVaccineById(Long id);
-    ResultData<String> deleteVaccine(Long id);
-    ResultData<List<VaccineResponse>> getAllVaccines();
 
+    // Update an existing vaccine by its ID
+    ResultData<VaccineResponse> updateVaccine(Long id, VaccineUpdateRequest request);
+
+    // Retrieve a specific vaccine by its ID
+    ResultData<VaccineResponse> getVaccineById(Long id);
+
+    // Delete a vaccine by its ID
+    ResultData<String> deleteVaccine(Long id);
+
+    // Retrieve a list of all vaccines
+    ResultData<List<VaccineResponse>> getAllVaccines();
 }

@@ -23,6 +23,7 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    // Create a new appointment
     @PostMapping
     public ResponseEntity<ResultData<AppointmentResponse>> createAppointment(@Valid @RequestBody AppointmentSaveRequest request) {
         ResultData<AppointmentResponse> result = appointmentService.createAppointment(request);
@@ -33,6 +34,7 @@ public class AppointmentController {
         }
     }
 
+    // Get an appointment by its ID
     @GetMapping("/{id}")
     public ResponseEntity<ResultData<AppointmentResponse>> getAppointmentById(@PathVariable Long id) {
         ResultData<AppointmentResponse> result = appointmentService.getAppointmentById(id);
@@ -43,26 +45,29 @@ public class AppointmentController {
         }
     }
 
+    // Delete an appointment by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultData<Void>> deleteAppointment(@PathVariable Long id) {
         ResultData<Void> result = appointmentService.deleteAppointment(id);
         if (result.isStatus()) {
-            return ResponseEntity.ok(result);  // HTTP 200 OK ile mesajı döndür
+            return ResponseEntity.ok(result);  // HTTP 200 OK with result message for success
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found ile hata mesajı döndür
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);  // HTTP 404 Not Found with result message for failure
         }
     }
 
+    // Get a list of appointments with optional filters
     @GetMapping
     public ResponseEntity<ResultData<List<AppointmentResponse>>> getAppointments(
             @RequestParam(required = false) Long doctor,
             @RequestParam(required = false) Long animal,
             @RequestParam(required = false) LocalDateTime startDateTime,
             @RequestParam(required = false) LocalDateTime endDateTime) {
-        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointments(doctor, animal, startDateTime);
+        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointments(doctor, animal, startDateTime, endDateTime);
         return ResponseEntity.ok(result);
     }
 
+    // Update an existing appointment
     @PutMapping("/{id}")
     public ResponseEntity<ResultData<AppointmentResponse>> updateAppointment(
             @PathVariable Long id,
@@ -82,19 +87,23 @@ public class AppointmentController {
         }
     }
 
+    // Get a list of appointments for a specific doctor and date range
     @GetMapping("/doctor")
     public ResponseEntity<ResultData<List<AppointmentResponse>>> getAppointmentsByDoctor(
             @RequestParam Long doctorId,
-            @RequestParam LocalDateTime startDateTime) {
-        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointmentsByDoctorAndDate(doctorId, startDateTime);
+            @RequestParam LocalDateTime startDateTime,
+            @RequestParam LocalDateTime endDateTime) {
+        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointmentsByDoctorAndDate(doctorId, startDateTime, endDateTime);
         return ResponseEntity.ok(result);
     }
 
+    // Get a list of appointments for a specific animal and date range
     @GetMapping("/animal")
     public ResponseEntity<ResultData<List<AppointmentResponse>>> getAppointmentsByAnimal(
             @RequestParam Long animalId,
-            @RequestParam LocalDateTime startDateTime) {
-        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointmentsByAnimalAndDate(animalId, startDateTime);
+            @RequestParam LocalDateTime startDateTime,
+            @RequestParam LocalDateTime endDateTime) {
+        ResultData<List<AppointmentResponse>> result = appointmentService.getAppointmentsByAnimalAndDate(animalId, startDateTime, endDateTime);
         return ResponseEntity.ok(result);
     }
 }
