@@ -82,8 +82,8 @@ Below is the UML diagram that illustrates the overall structure and relationship
 | Update Appointment         | `/appointments`                          | PUT    | Updates details of an existing appointment.    |
 | Get All Appointments       | `/appointments`                          | GET    | Retrieves details of all appointments.         |
 | Get Appointment by ID      | `/appointments/{id}`                     | GET    | Retrieves details of an appointment by ID.     |
-| Get Appointments by Doctor | `/appointments/doctor?doctorId={doctorId}&startDateTime={startDateTime}`        | GET    | Retrieves all appointments for a specific doctor starting from the given date and time. |
-| Get Appointments by Animal | `/appointments/animal?animalId={animalId}&startDateTime={startDateTime}`        | GET    | Retrieves all appointments for a specific animal starting from the given date and time. |
+| Get Appointments by Doctor | `/appointments/doctor?doctorId={doctorId}&startDateTime={startDateTime}&endDateTime={endDateTime}`        | GET    | Retrieves all appointments for a specific doctor starting from the given date and time, up to the specified end date and time. |
+| Get Appointments by Animal | `//appointments/animal?animalId={animalId}&startDateTime={startDateTime}&endDateTime={endDateTime}`        | GET    | Retrieves all appointments for a specific animal starting from the given date and time, up to the specified end date and time. |
 | Delete Appointment         | `/appointments/{id}`                     | DELETE | Deletes an appointment by ID.                  |
 
 ## Technologies Used
